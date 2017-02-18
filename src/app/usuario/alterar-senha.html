@@ -1,0 +1,42 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-primary">
+			<form novalidate name="formulario" ng-submit="vm.alterar()">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.senha.$dirty && formulario.senha.$invalid ? 'has-error' : ''">
+								<label for="senha">Senha Atual: *</label>
+								<input id="senha" type="password" name="senha" class="form-control" placeholder="Informe a sua senha atual" ng-model="vm.usuario.senha" required>
+								<span class="help-block" ng-show="formulario.senha.$dirty && formulario.senha.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.novaSenha.$dirty && formulario.novaSenha.$invalid ? 'has-error' : ''">
+								<label for="novaSenha">Nova Senha: *</label>
+								<input id="novaSenha" type="password" name="novaSenha" class="form-control" placeholder="Informe a senha desejada" ng-model="vm.usuario.novaSenha" required>
+								<span class="help-block" ng-show="formulario.novaSenha.$dirty && formulario.novaSenha.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.confirmacao.$dirty && formulario.confirmacao.$invalid ? 'has-error' : ''">
+								<label for="confirmacao">Confirmação: *</label>
+								<input id="confirmacao" type="password" name="confirmacao" class="form-control" placeholder="Confirme a senha desejada" ng-model="vm.usuario.confirmacao" required>
+								<span class="help-block" ng-show="formulario.confirmacao.$dirty && formulario.confirmacao.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box-footer">
+					<button type="submit" class="btn btn-primary btn-flat" ng-disabled="formulario.$invalid">Alterar Senha</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

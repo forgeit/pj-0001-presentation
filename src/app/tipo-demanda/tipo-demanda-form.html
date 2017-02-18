@@ -1,0 +1,24 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-primary">
+			<form novalidate name="formulario" ng-submit="vm.editar ? vm.atualizar(formulario) : vm.salvar(formulario)">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.descricao.$dirty && formulario.descricao.$invalid ? 'has-error' : ''">
+								<label for="descricao">Descrição: *</label>
+								<input id="descricao" type="text" name="descricao" class="form-control" placeholder="Informe a descrição do tipo de demanda" ng-model="vm.tipoDemanda.descricao" required>
+								<span class="help-block" ng-show="formulario.descricao.$dirty && formulario.descricao.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box-footer">
+					<button type="submit" class="btn btn-primary btn-flat" ng-show="vm.editar">Atualizar</button>
+					<button type="submit" class="btn btn-primary btn-flat" ng-hide="vm.editar" ng-disabled="formulario.$invalid">Salvar</button>
+					<button type="button" class="btn btn-primary btn-flat" ng-click="vm.voltar()">Voltar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

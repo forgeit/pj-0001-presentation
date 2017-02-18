@@ -1,0 +1,81 @@
+<!-- <button ng-click="vm.teste()">teste</button> -->
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-primary">
+			<form novalidate name="formulario" ng-submit="vm.editar ? vm.atualizar(formulario) : vm.salvar(formulario)">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.solicitante.$dirty && formulario.solicitante.$invalid ? 'has-error' : ''">
+								<label for="solicitante">Solicitante: *</label>
+								<select class="form-control" id="solicitante" name="solicitante" ng-options="solicitante.id_pessoa as solicitante.nome for solicitante in vm.solicitanteList track by solicitante.id_pessoa" ng-model="vm.demanda.solicitante" required>
+							    	<option value="">Selecione</option> 	
+								</select>
+								<span class="help-block" ng-show="formulario.solicitante.$dirty && formulario.solicitante.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<label for="filtro">Filtrar Solicitantes:</label>
+								<input id="filtro" type="text" name="filtro" class="form-control" placeholder="Filtrar solicitantes" ng-model="vm.filtrar">
+								<span class="input-group-btn">
+									<button type="button" ng-click="vm.filtrarPessoa()" style="margin-top: 25px;" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
+								</span>
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="dtContato">Data de Contato: *</label>
+								<input id="dtContato" type="text" name="dtContato" class="form-control" ng-model="vm.demanda.dtContato" placeholder="Informe a data de contato" required>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.titulo.$dirty && formulario.titulo.$invalid ? 'has-error' : ''">
+								<label for="titulo">Título: *</label>
+								<input id="titulo" type="text" name="titulo" class="form-control" placeholder="Informe um título para a demanda" ng-model="vm.demanda.titulo" required>
+								<span class="help-block" ng-show="formulario.titulo.$dirty && formulario.titulo.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.tipoDemanda.$dirty && formulario.tipoDemanda.$invalid ? 'has-error' : ''">
+								<label for="tipoDemanda">Tipo de Demanda: *</label>
+								<select class="form-control" id="tipoDemanda" name="tipoDemanda" ng-options="tipoDemanda.id_tipo_demanda as tipoDemanda.descricao for tipoDemanda in vm.tipoDemandaList track by tipoDemanda.id_tipo_demanda" ng-model="vm.demanda.tipoDemanda" required>
+							    	<option value="">Selecione</option> 	
+								</select>
+								<span class="help-block" ng-show="formulario.tipoDemanda.$dirty && formulario.tipoDemanda.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="prazoFinal">Prazo para Demanda: </label>
+								<input id="prazoFinal" type="text" name="prazoFinal" class="form-control" ng-model="vm.demanda.prazoFinal" placeholder="Informe o prazo para cumprir a demanda">
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="descricao">Descrição da Demanda: </label>
+								<textarea class="form-control" placeholder="Descreva a solicitação" rows="5" id="descricao" ng-model="vm.demanda.descricao"></textarea>
+							</div>
+						</div>
+					</div>
+
+					<upload-arquivo></upload-arquivo>
+
+				<div class="box-footer">
+					<button type="submit" class="btn btn-primary btn-flat" ng-show="vm.editar">Atualizar</button>
+					<button type="submit" class="btn btn-primary btn-flat" ng-hide="vm.editar" ng-disabled="formulario.$invalid">Salvar</button>
+					<button type="button" class="btn btn-primary btn-flat" ng-click="vm.voltar()">Voltar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</div>

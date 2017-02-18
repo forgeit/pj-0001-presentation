@@ -1,0 +1,168 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-primary">
+			<form novalidate name="formulario" ng-submit="vm.editar ? vm.atualizar(formulario) : vm.salvar(formulario)">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.nome.$dirty && formulario.nome.$invalid ? 'has-error' : ''">
+								<label for="nome">Nome: *</label>
+								<input id="nome" type="text" name="nome" class="form-control" placeholder="Informe o nome da pessoa" ng-model="vm.pessoa.nome" required>
+								<span class="help-block" ng-show="formulario.nome.$dirty && formulario.nome.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.email.$dirty && formulario.email.$invalid ? 'has-error' : ''">
+								<label for="email">E-mail:</label>
+								<input id="email" type="email" name="email" class="form-control" placeholder="Informe o e-mail" ng-model="vm.pessoa.email">
+								<span class="help-block" ng-show="formulario.email.$dirty && formulario.email.$error.email">O e-mail informado é inválido</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.tipoPessoa.$dirty && formulario.tipoPessoa.$invalid ? 'has-error' : ''">
+								<label for="tipoPessoa">Tipo da Pessoa: *</label>
+								<select class="form-control" id="tipoPessoa" name="tipoPessoa" ng-options="tipoPessoa.id_tipo_pessoa as tipoPessoa.descricao for tipoPessoa in vm.tipoPessoaList track by tipoPessoa.id_tipo_pessoa" ng-model="vm.pessoa.tipoPessoa" required>
+							    	<option value="">Selecione</option> 	
+								</select>
+								<span class="help-block" ng-show="formulario.tipoPessoa.$dirty && formulario.tipoPessoa.$invalid">O campo é obrigatório</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Tipo:</label>
+								<br/>
+								<label class="radio-inline">
+							  		<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="F" ng-model="vm.pessoa.fgTipoPessoa"> Física
+								</label>
+								<label class="radio-inline">
+							  		<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="J" ng-model="vm.pessoa.fgTipoPessoa"> Jurídica
+								</label>
+							</div>
+						</div>
+						<div class="col-md-4" ng-show="vm.pessoa.fgTipoPessoa == 'F'" ng-class="formulario.cpf.$dirty && formulario.cpf.$invalid ? 'has-error' : ''">
+							<div class="form-group">
+								<label for="cpf">CPF:</label>
+								<input id="cpf" type="text" name="cpf" class="form-control" ng-model="vm.pessoa.cpf" ng-cpf ui-mask="999.999.999-99">
+								<span class="help-block" ng-show="formulario.cnpj.$dirty && formulario.cnpj.$invalid">O CPF informado é inválido.</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+						<div class="form-group" ng-show="vm.pessoa.fgTipoPessoa == 'J'" ng-class="formulario.cnpj.$dirty && formulario.cnpj.$invalid ? 'has-error' : ''">
+								<label for="cnpj">CNPJ:</label>
+								<input id="cnpj" type="text" name="cnpj" class="form-control" ng-model="vm.pessoa.cnpj" ng-cnpj ui-mask="99.999.999/9999-99">
+								<span class="help-block" ng-show="formulario.cnpj.$dirty && formulario.cnpj.$invalid">O CNPJ informado é inválido.</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.telefone.$dirty && formulario.telefone.$invalid ? 'has-error' : ''">
+								<label for="telefone">Telefone:</label>
+								<input id="telefone" type="text" name="telefone" class="form-control" ng-model="vm.pessoa.telefone" ui-mask="(99) 9999-9999?9">
+								<span class="help-block" ng-show="formulario.telefone.$dirty && formulario.telefone.$invalid">O telefone informado é inválido.</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" ng-class="formulario.celular.$dirty && formulario.celular.$invalid ? 'has-error' : ''">
+								<label for="celular">Celular:</label>
+								<input id="celular" type="text" name="celular" class="form-control" ng-model="vm.pessoa.celular" ui-mask="(99) 9999-9999?9">
+								<span class="help-block" ng-show="formulario.celular.$dirty && formulario.celular.$invalid">O celular informado é inválido.</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="numero">Número do Endereço:</label>
+								<input id="numero" type="text" name="numero" class="form-control" ng-model="vm.pessoa.numero" placeholder="Informe o número da residência">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="cidade">Cidade:</label>
+								<select class="form-control" id="cidade" name="cidade" ng-options="cidade.id_cidade as cidade.nome for cidade in vm.cidadeList track by cidade.id_cidade" ng-model="vm.pessoa.cidade" ng-change="vm.carregarBairroList(vm.pessoa.cidade)">
+							    	<option value="">Selecione</option> 	
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="bairro">Bairro:</label>
+								<select class="form-control" id="bairro" name="bairro" ng-options="bairro.id_bairro as bairro.nome for bairro in vm.bairroList track by bairro.id_bairro" ng-model="vm.pessoa.bairro" ng-change="vm.carregarLogradouroList(vm.pessoa.bairro)">
+							    	<option value="">Selecione</option> 	
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="logradouro">Logradouro:</label>
+								<select class="form-control" id="logradouro" name="logradouro" ng-options="logradouro.id_logradouro as logradouro.nome for logradouro in vm.logradouroList track by logradouro.id_logradouro" ng-model="vm.pessoa.logradouro">
+							    	<option value="">Selecione</option> 	
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<label for="filtro">Filtrar Logradouro:</label>
+								<input id="filtro" type="text" name="filtro" class="form-control" placeholder="Filtrar logradouros" ng-model="vm.filtrar">
+								<span class="input-group-btn">
+									<button type="button" ng-click="vm.filtrarLogradouro()" style="margin-top: 25px;" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
+								</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="numero">Adicionar Novo Logradouro:</label>
+								<br/>
+								<button type="button" class="btn btn-primary btn-flat" ng-click="vm.abrirModal()">Adicionar</button>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="observacao">Observações:</label>
+								<textarea id="observacao" class="form-control" placeholder="Observações referentes a pessoa" ng-model="vm.pessoa.observacao"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box-footer">
+					<button type="submit" class="btn btn-primary btn-flat" ng-show="vm.editar">Atualizar</button>
+					<button type="submit" class="btn btn-primary btn-flat" ng-hide="vm.editar" ng-disabled="formulario.$invalid">Salvar</button>
+					<button type="button" class="btn btn-primary btn-flat" ng-click="vm.voltar()">Voltar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade modalLogradouro" id="modalLogradouro" tabindex="-1" role="dialog" aria-labelledby="modalLogradouroLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form novalidate name="formularioLogradouro" ng-submit="vm.salvarLogradouro(formularioLogradouro)">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group" ng-class="formularioLogradouro.nome.$dirty && formularioLogradouro.nome.$invalid ? 'has-error' : ''">
+							<label for="nome">Nome: *</label>
+							<input id="nome" type="text" name="nome" class="form-control" placeholder="Informe o logradouro" ng-model="vm.logradouro.nome" required>
+							<span class="help-block" ng-show="formularioLogradouro.nome.$dirty && formularioLogradouro.nome.$invalid">O campo é obrigatório</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary btn-flat" ng-disabled="formularioLogradouro.$invalid">Salvar</button>
+				<button type="button" class="btn btn-primary btn-flat" data-dismiss="modal">Fechar</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>

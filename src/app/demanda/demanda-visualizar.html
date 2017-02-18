@@ -1,0 +1,206 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-primary">
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="solicitante">Solicitante: *</label>
+							<input type="text" readonly="true" ng-model="vm.demanda.solicitante" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="dtContato">Data de Contato: *</label>
+							<input type="text" class="form-control" ng-model="vm.demanda.dtContato" readonly="true">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group" >
+							<label for="titulo">Título: *</label>
+							<input type="text" class="form-control" ng-model="vm.demanda.titulo" readonly="true">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group" >
+							<label for="tipoDemanda">Tipo de Demanda: *</label>
+							<input type="text" class="form-control" ng-model="vm.demanda.tipoDemanda" readonly="true">
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="prazoFinal">Prazo para Demanda: </label>
+							<input type="text" class="form-control" ng-model="vm.demanda.prazoFinal" readonly="true">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="descricao">Descrição da Demanda: </label>
+							<textarea class="form-control" rows="5" id="descricao" ng-model="vm.demanda.descricao" readonly="true"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" ng-show="vm.demanda.arquivos.length > 0">
+					<div class="col-md-12">
+						<table class="table table-responsive">
+							<thead>
+								<tr>
+									<th>Arquivo</th>
+									<th>Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="arquivo in vm.demanda.arquivos">
+									<td>{{ arquivo.nome }}</td>
+									<td>
+										<a target="_" href="{{ 'mathias/' + arquivo.arquivo }}" class="btn btn-primary btn-xs btn-flat">Baixar</a>
+										<button ng-show="vm.demanda.id_situacao != 5 && vm.demanda.id_situacao != 6" type="button" class="btn btn-danger btn-xs btn-flat">Remover</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<table class="table table-responsive">
+							<thead>
+								<tr style="font-weight: bold; background-color: #ddd;">
+									<th>Situação</th>
+									<th>Data</th>
+									<th>Pessoa</th>
+									<th>Descrição</th>
+									<th>Arquivos</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="fluxo in vm.demanda.fluxo">
+									<td style="font-weight: bold; background-color: #eee;">{{ fluxo.situacao }}</td>
+									<td>{{ fluxo.tsTransacao }}</td>
+									<td>{{ fluxo.pessoa }}</td>
+									<td class="text-center" ng-show="fluxo.descricao == 'Não Informado'">{{ fluxo.descricao }}</td>
+									<td class="text-center" ng-show="fluxo.descricao != 'Não Informado'"><button class="btn btn-primary btn-xs btn-flat" ng-click="vm.setarDescricao(fluxo.descricao)">Ler</button></td>
+									<td class="text-center" ng-show="fluxo.total == 'Não Possui'">{{ fluxo.total }}</td>
+									<td class="text-center" ng-show="fluxo.total != 'Não Possui'"><button class="btn btn-primary btn-xs btn-flat" ng-click="vm.setarArquivos(fluxo.id_demanda_fluxo)">Ver Arquivos</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row" ng-show="vm.demanda.id_situacao != 5 && vm.demanda.id_situacao != 6">
+	<div class="col-md-12">
+		<div class="box box-primary">
+			<div class="box-header with-border">
+              <h3 class="box-title">Adicionar Fluxo</h3>
+            </div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="destinatario">Destinatário: </label>
+							<select class="form-control" id="destinatario" name="destinatario" ng-options="destinatario.id_pessoa as destinatario.nome for destinatario in vm.destinatarioList track by destinatario.id_pessoa" ng-model="vm.demandaFluxo.destinatario">
+						    	<option value="">Selecione</option> 	
+							</select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="input-group">
+							<label for="filtro">Filtrar Destinatários:</label>
+							<input id="filtro" type="text" name="filtro" class="form-control" placeholder="Filtrar solicitantes" ng-model="vm.filtrar">
+							<span class="input-group-btn">
+								<button ng-click="vm.filtrarPessoa()" style="margin-top: 25px;" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
+							</span>
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="situacao">Situação: *</label>
+							<select class="form-control" id="situacao" name="situacao" ng-options="situacao.id_situacao as situacao.descricao for situacao in vm.situacaoList track by situacao.id_situacao" ng-model="vm.demandaFluxo.situacao" required>
+						    	<option value="">Selecione</option> 	
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="descricao">Descrição: </label>
+							<textarea class="form-control" placeholder="Descreva a solicitação" rows="5" id="descricao" ng-model="vm.demandaFluxo.descricao"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<upload-arquivo></upload-arquivo>
+			</div>
+			<div class="box-footer">
+				<button type="submit" class="btn btn-primary btn-flat" ng-click="vm.salvar()">Salvar</button>
+				<button type="button" class="btn btn-primary btn-flat" ng-click="vm.voltar()">Voltar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade modalDescricao" id="modalDescricao" tabindex="-1" role="dialog" aria-labelledby="modalDescricaoLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="modalDescricaoLabel">Leitura de Descrição</h4>
+			</div>
+			<div class="modal-body">
+				{{ vm.descricao }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade modalArquivos" id="modalArquivos" tabindex="-1" role="dialog" aria-labelledby="modalArquivosLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="modalArquivosLabel">Arquivos do Fluxo de Demanda</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-responsive">
+					<thead>
+						<tr>
+							<th>Arquivo</th>
+							<th>Ações</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="arquivo in vm.arquivos">
+							<td>{{ arquivo.nome }}</td>
+							<td>
+								<a target="_" href="{{ 'mathias/' + arquivo.arquivo }}" class="btn btn-primary btn-xs btn-flat">Baixar</a>
+								<button ng-show="vm.demanda.id_situacao != 5 && vm.demanda.id_situacao != 6" type="button" class="btn btn-danger btn-xs btn-flat">Remover</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>

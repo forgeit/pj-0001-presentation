@@ -1,0 +1,10 @@
+arquivos/
+server/application/config/database.php
+bower_components/
+database/
+debug/
+vendor/
+build/
+server/system/cache/
+gulp.config.php.json
+index-deploy.html
