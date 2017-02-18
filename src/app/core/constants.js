@@ -7,8 +7,8 @@
 		demanda: 'demanda/',
 		pessoa: 'pessoa/',
 		tipoDemanda: 'tipo-demanda/',
-		// url: 'http://localhost/mathias/server/'
-		url: 'http://sistema.mathiasbertram.com.br/server/'
+		url: 'http://localhost/pj-0001-presentation/server/'
+		// url: 'http://sistema.mathiasbertram.com.br/server/'
 	};
 
 	var datepicker = {
