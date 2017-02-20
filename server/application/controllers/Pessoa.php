@@ -232,7 +232,7 @@ class Pessoa extends MY_Controller {
 			if ($pessoa->email) {
 				$pessoaModel['email'] = $pessoa->email;
 
-				if ($this->PessoaModel->buscarPorEmailId($pessoaModel['email'], $pessoaModel['id_pessoa'])) {
+				if ($this->PessoaModel->buscarPorEmail($pessoaModel['email'])) {
 					print_r(json_encode($this->gerarRetorno(FALSE, "O e-mail informado já está registrado.")));
 					die();
 				}
