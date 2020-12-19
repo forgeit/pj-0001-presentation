@@ -7,11 +7,11 @@ class MY_Controller extends CI_Controller {
 
 		$seguro = true;
 
-		if ($this->uri->uri_string == 'login/entrar' || $this->uri->uri_string == 'upload') {
+		if ($this->uri->uri_string == 'login/entrar' || $this->uri->uri_string == 'upload' || strpos($this->uri->uri_string,'demanda/getImagem') === true) {
 			$seguro = false;
 		}
 
-		// $seguro = false;
+		$seguro = false;
 
 		if ($seguro) {
 			if ($this->input->get_request_header('Authorization')) {

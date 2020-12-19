@@ -81,3 +81,4 @@ $route['situacao/combo'] = 'situacao/buscarCombo';
 $route['usuario/alterar-senha/(:num)'] = 'usuario/alterarSenha/$1';
 $route['logradouro/filtrar'] = 'logradouro/filtrar';
 $route['logradouro/salvar'] = 'logradouro/salvar';
+$route['demanda/mobile/salvar'] = 'demanda/criarDemandaMobile';

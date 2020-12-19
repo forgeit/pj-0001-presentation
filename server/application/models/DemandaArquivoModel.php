@@ -28,4 +28,20 @@ class DemandaArquivoModel extends MY_Model {
             return null;
         }
 	}	
+
+	function buscarArquivo($id) {
+		$sql = "SELECT 
+				*
+				FROM demanda_arquivo
+				WHERE 
+				id_demanda_arquivo = ?";
+
+        $query = $this->db->query($sql, array($id));
+
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
+	}	
 }

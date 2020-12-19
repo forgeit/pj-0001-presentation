@@ -61,7 +61,7 @@
 								<tr ng-repeat="arquivo in vm.demanda.arquivos">
 									<td>{{ arquivo.nome }}</td>
 									<td>
-										<a target="_" href="{{ 'mathias/' + arquivo.arquivo }}" class="btn btn-primary btn-xs btn-flat">Baixar</a>
+										<a target="_" href="server/demanda/getImagem/{{ arquivo.id_demanda_arquivo }}" class="btn btn-primary btn-xs btn-flat">Baixar</a>
 										<button ng-show="vm.demanda.id_situacao != 5 && vm.demanda.id_situacao != 6" type="button" class="btn btn-danger btn-xs btn-flat">Remover</button>
 									</td>
 								</tr>

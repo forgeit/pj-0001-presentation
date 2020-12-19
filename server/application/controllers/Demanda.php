@@ -3,6 +3,117 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Demanda extends MY_Controller {
 
+	private $DEMANDA_PENDENTE_DE_VALIDACAO = 7;
+
+	public function getImagem()
+    {
+		$id =  $this->uri->segment(3);
+		
+		$model = $this->DemandaArquivoModel->buscarArquivo($id);
+
+		$img = $model[0]['arquivo'];
+
+        $info = getimagesize($img);
+        header('Content-type: ' . $info['mime']);
+        readfile($img);
+    }
+
+	public function criarDemandaMobile() {
+		$data = $this->security->xss_clean($this->input->raw_input_stream);
+		$demanda = json_decode($data, true);
+		$demanda['id_situacao'] = $this->DEMANDA_PENDENTE_DE_VALIDACAO;
+		$demanda['dt_criacao'] = date('Y-m-d');
+		$demanda['dt_contato'] = date('Y-m-d');
+
+		$solicitante = isset($demanda['solicitante']) ? $demanda['solicitante'] : null; 
+
+		if (is_null($solicitante)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Informe o solicitante.")));
+			die();
+		}
+
+		if (!isset($demanda['descricao'])) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Descreva a demanda.")));
+			die();
+		}
+
+		if (!isset($demanda['id_tipo_demanda'])) {
+			$demanda['tipo_demanda'] = 1;
+		}
+
+		unset($demanda['solicitante']);
+
+		$arquivos = $demanda['arquivos'];
+
+		unset($demanda['arquivos']);
+
+		$pessoa = $this->PessoaModel->buscarPorEmail($solicitante['email'])[0];
+
+		if (is_null($pessoa)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "O solicitante informado não está cadastrado na base de dados.")));
+			die();
+		}
+
+		$demanda['id_solicitante'] = $pessoa['id_pessoa'];
+
+		$this->db->trans_begin();
+
+		$idDemanda = $this->DemandaModel->inserirRetornaId($demanda);
+
+		$demandaFluxoModel = array(
+			'id_demanda' => $idDemanda,
+			'id_situacao' => $this->DEMANDA_PENDENTE_DE_VALIDACAO,
+			'ts_transacao' => date('Y-m-d H:i:s')
+		);
+
+		$this->DemandaFluxoModel->inserir($demandaFluxoModel);
+
+		if (count($arquivos) > 0) {
+			foreach ($arquivos as $key => $value) {
+				$imagem = $this->gerarImagem($value['base64'], $value['nome']);
+
+				$demandaArquivoModel = array();
+				$demandaArquivoModel['id_demanda'] = $idDemanda;
+				$demandaArquivoModel['arquivo'] = $imagem;
+				$demandaArquivoModel['nome'] = $value['nome'];
+				$this->DemandaArquivoModel->inserir($demandaArquivoModel);
+			}
+		}
+
+		if ($this->db->trans_status() === FALSE){
+			$this->db->trans_rollback();
+			print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao registrar a nova demanda.")));
+		} else {
+			$this->db->trans_commit();
+			print_r(json_encode($this->gerarRetorno(TRUE, "A demanda foi registrada com sucesso.")));
+		}
+	}
+
+	public function gerarImagem($base64, $nome) {
+		if (!file_exists("/home/forge821/dados/demandas/fotos/")) {
+			return null;
+		}
+
+		$folderPath =  "/home/forge821/dados/demandas/fotos/" . date('Ymd') . "/";
+
+		if (!file_exists($folderPath)) {
+			mkdir($folderPath, 0755, true);
+		}
+
+        $image_base64 = base64_decode($base64);
+
+		$file = $folderPath . uniqid() . '-' . $nome;
+
+        file_put_contents($file, $image_base64);
+
+        if (file_exists($file)) {
+        	return $file;
+        } else {
+        	return null;
+        }
+
+	}
+
 	public function buscarTodos() {
 		$lista = $this->DemandaModel->buscarTodosNativo();
 		print_r(json_encode(array('data' => array ('datatables' => $lista ? $lista : array()))));

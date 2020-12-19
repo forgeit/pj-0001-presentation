@@ -51,7 +51,7 @@ class PessoaModel extends MY_Model {
 
 	function buscarPorEmail($email) {
 		$sql = "SELECT 
-				nome
+                *
 				FROM pessoa p
 				WHERE email = ?";
 

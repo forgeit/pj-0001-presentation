@@ -7,8 +7,8 @@
 		demanda: 'demanda/',
 		pessoa: 'pessoa/',
 		tipoDemanda: 'tipo-demanda/',
-		// url: 'http://localhost/pj-0001-presentation/server/'
-		url: 'http://vereador.forgeit.com.br/server/'
+		url: 'http://localhost:3334/server/'
+		// url: 'http://vereador.forgeit.com.br/server/'
 	};
 
 	var datepicker = {
