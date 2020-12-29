@@ -41,6 +41,17 @@ class Demanda extends MY_Controller {
 			$demanda['tipo_demanda'] = 1;
 		}
 
+		if (!isset($demanda['id_vereador_responsavel'])) {
+			$demanda['id_vereador_responsavel'] = null;
+		} else {
+			$vereador = $this->UsuarioModel->buscarPorId($demanda['id_vereador_responsavel'], 'id_usuario');
+
+			if (is_null($vereador)) {
+				print_r(json_encode($this->gerarRetorno(FALSE, "Vereador não encontrado na base de dados.")));
+				die();	
+			}
+		}
+
 		unset($demanda['solicitante']);
 
 		$arquivos = $demanda['arquivos'];

@@ -145,5 +145,6 @@ $autoload['model'] = array(
 	'DemandaFluxoModel',
 	'SituacaoModel',
 	'DemandaArquivoFluxoModel',
-	'UsuarioModel'
+	'UsuarioModel',
+	'PontosUsuarioModel'
 );
