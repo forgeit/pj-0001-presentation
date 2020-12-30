@@ -3,6 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Usuario extends MY_Controller {
 
+	public function buscarVereadoresMobile() {
+		$lista = $this->UsuarioModel->buscarComboVereadores();
+
+		$array = array('data' => array('vereadores' => $lista));
+		print_r(json_encode($array));
+	}
+
 	public function buscarDadosUsuarioMobile() {
 		$id = $this->uri->segment(4);
 
@@ -85,6 +92,10 @@ class Usuario extends MY_Controller {
 		
 		$array = array('data' => array('Usuario' => $retorno));
 		print_r(json_encode($array));
+	}
+
+	public function criarUsuario() {
+
 	}
 
 	public function alterarSenha() {

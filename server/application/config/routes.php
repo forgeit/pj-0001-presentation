@@ -83,3 +83,4 @@ $route['logradouro/filtrar'] = 'logradouro/filtrar';
 $route['logradouro/salvar'] = 'logradouro/salvar';
 $route['mobile/demanda/salvar'] = 'demanda/criarDemandaMobile';
 $route['mobile/usuario/buscar/(:num)'] = 'usuario/buscarDadosUsuarioMobile';
+$route['mobile/vereadores/combo'] = 'usuario/buscarVereadoresMobile';
