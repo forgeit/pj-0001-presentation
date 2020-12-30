@@ -44,4 +44,18 @@ class MY_Controller extends CI_Controller {
 			}
 		}
 	}
+
+	public function validarEntrada($entrada, $chave) {
+		if (!isset($entrada[$chave]) || is_null($entrada[$chave]) || !is_array($entrada)) {
+			return false;
+		}	
+
+		$entrada[$chave] = trim($entrada[$chave]);
+
+		if (!strlen($entrada[$chave]) > 0) {
+			return false;
+		}
+
+		return true;
+	}
 }

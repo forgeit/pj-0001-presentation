@@ -1,16 +1,102 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Usuario extends MY_Controller {
+class Usuario extends MY_Controller
+{
 
-	public function buscarVereadoresMobile() {
+	public function criarUsuarioMobile()
+	{
+		$data = $this->security->xss_clean($this->input->raw_input_stream);
+		$usuario = json_decode($data, true);
+
+		if (!$this->validarEntrada($usuario, 'nome')) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Nome é obrigatório.")));
+			die();
+		}
+
+		if (!$this->validarEntrada($usuario, 'login')) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Email é obrigatório.")));
+			die();
+		} else {
+
+		}
+
+		if (!$this->validarEntrada($usuario, 'cpf')) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "CPF é obrigatório.")));
+			die();
+		} else {
+			if (!$this->validaCPF($usuario['cpf'])) {
+				print_r(json_encode($this->gerarRetorno(FALSE, "CPF é inválido.")));
+				die();
+			} else {
+			}
+		}
+
+		if (!$this->validarEntrada($usuario, 'senha')) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Senha é obrigatório.")));
+			die();
+		} else {
+			$usuario['senha'] = md5($usuario['senha']);
+		}
+
+		$usuarioCadastro = $this->UsuarioModel->buscarPorId($usuario['login'], 'login');
+
+		if ($usuarioCadastro) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário já cadastrado.")));
+			die();
+		}
+
+		$pessoaCadastro = $this->PessoaModel->buscarPorId($usuario['cpf'], 'cpf_cnpj');
+
+		if ($pessoaCadastro) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário já cadastrado.")));
+			die();
+		}
+
+		$usuario['cargo'] = "Usuário";
+
+		$pessoa = array();
+		$pessoa['nome'] = $usuario['nome'];
+		$pessoa['email'] = $usuario['login'];
+		$pessoa['cpf_cnpj'] = $usuario['cpf'];
+		$pessoa['id_tipo_pessoa'] = 4;
+		$pessoa['fg_tipo_pessoa'] = TRUE;
+		unset($usuario['cpf']);
+
+		$this->db->trans_begin();
+
+		$idPessoa = $this->PessoaModel->inserirRetornaId($pessoa);
+
+		if ($idPessoa) {
+			$usuario['id_pessoa'] = $idPessoa;
+
+			$idUsuario = $this->UsuarioModel->inserirRetornaId($usuario);
+
+			$this->db->trans_complete();
+
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao criar o usuário.")));
+			} else {
+				$this->db->trans_commit();
+				print_r(json_encode($this->gerarRetorno(TRUE, "Usuário criado com sucesso.")));
+			}
+		} else {
+			$this->db->trans_rollback();
+			print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao criar o usuário.")));
+		}
+	}
+
+	public function buscarVereadoresMobile()
+	{
 		$lista = $this->UsuarioModel->buscarComboVereadores();
 
 		$array = array('data' => array('vereadores' => $lista));
 		print_r(json_encode($array));
 	}
 
-	public function buscarDadosUsuarioMobile() {
+	public function buscarDadosUsuarioMobile()
+	{
 		$id = $this->uri->segment(4);
 
 		$usuario = $this->UsuarioModel->buscarPorId($id, 'id_usuario');
@@ -27,7 +113,7 @@ class Usuario extends MY_Controller {
 			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário não encontrado.")));
 			die();
 		}
-		
+
 		$retorno = array();
 
 		$retorno['nome'] = $usuario['nome'];
@@ -35,7 +121,7 @@ class Usuario extends MY_Controller {
 
 		$imagem = $usuario['imagem'];
 
-		if (!file_exists($imagem)) {	
+		if (!file_exists($imagem)) {
 			$imagem = __DIR__ . "/../../../src/app/layout/img/perfil.jpg";
 		}
 
@@ -77,7 +163,6 @@ class Usuario extends MY_Controller {
 				$retorno['endereco']['cidade'] = $cidade['nome'];
 				$retorno['endereco']['uf'] = $cidade['uf'];
 			}
-				
 		}
 
 		$pontos = $this->PontosUsuarioModel->buscarPorUsuario($usuario['id_usuario']);
@@ -89,16 +174,13 @@ class Usuario extends MY_Controller {
 		}
 
 		$retorno['pontos'] = $pontos;
-		
+
 		$array = array('data' => array('Usuario' => $retorno));
 		print_r(json_encode($array));
 	}
 
-	public function criarUsuario() {
-
-	}
-
-	public function alterarSenha() {
+	public function alterarSenha()
+	{
 		$data = $this->security->xss_clean($this->input->raw_input_stream);
 		$usuario = json_decode($data);
 
@@ -111,24 +193,25 @@ class Usuario extends MY_Controller {
 
 		if ($usuario->novaSenha !== $usuario->confirmacao) {
 			print_r(json_encode($this->gerarRetorno(FALSE, "A nova senha deve ser igual a confirmação.")));
-			die();	
+			die();
 		}
 
 		$usuarioAtual['senha'] = md5($usuario->novaSenha);
 
 		if ($this->UsuarioModel->atualizar($this->uri->segment(3), $usuarioAtual, 'id_usuario')) {
 			print_r(json_encode($this->gerarRetorno(TRUE, "Sucesso ao alterar a senha.")));
-			die();		
+			die();
 		} else {
 			print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao alterar a senha.")));
-			die();	
+			die();
 		}
 	}
 
-	private function gerarRetorno($response, $mensagem) {
+	private function gerarRetorno($response, $mensagem)
+	{
 		$message = array();
-		$message[] = $response == TRUE ? 
-			array('tipo' => 'success', 'mensagem' => $mensagem) : 
+		$message[] = $response == TRUE ?
+			array('tipo' => 'success', 'mensagem' => $mensagem) :
 			array('tipo' => 'error', 'mensagem' => $mensagem);
 
 		$array = array(
@@ -137,5 +220,27 @@ class Usuario extends MY_Controller {
 		);
 
 		return $array;
+	}
+
+	public function validaCPF($cpf)
+	{
+		if (strlen($cpf) != 11) {
+			return false;
+		}
+
+		if (preg_match('/(\d)\1{10}/', $cpf)) {
+			return false;
+		}
+
+		for ($t = 9; $t < 11; $t++) {
+			for ($d = 0, $c = 0; $c < $t; $c++) {
+				$d += $cpf[$c] * (($t + 1) - $c);
+			}
+			$d = ((10 * $d) % 11) % 10;
+			if ($cpf[$c] != $d) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
