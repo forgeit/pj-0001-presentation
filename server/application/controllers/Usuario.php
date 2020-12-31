@@ -4,6 +4,74 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Usuario extends MY_Controller
 {
 
+	public function definirXPUsuarioMobile() {
+		$data = $this->security->xss_clean($this->input->raw_input_stream);
+		$usuario = json_decode($data, true);
+
+		if (!$this->validarEntrada($usuario, 'usuario')) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário é obrigatório.")));
+			die();
+		}
+
+		if (!$this->validarEntrada($usuario, 'valor')) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Valor é obrigatório.")));
+			die();
+		}
+
+		if (!$this->validarEntrada($usuario, 'tipo')) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Tipo é obrigatório.")));
+			die();
+		}
+
+		$pontos = $this->PontosUsuarioModel->buscarPorUsuario($usuario['usuario']);
+
+		if (is_null($pontos) || !is_array($pontos) || count($pontos) == 0) {
+			$model = array(
+				'id_usuario' => $usuario['usuario'],
+				'valor' => 0,
+				'data_cadastro' => date('Y-m-d')
+			);
+		} else {
+			$model = array(
+				'id_usuario' => $usuario['usuario'],
+				'valor' => $pontos[0]['xp'],
+				'data_cadastro' => date('Y-m-d')
+			);
+		}
+
+		switch ($usuario['tipo']) {
+			case 'add':
+				$model['valor'] += $usuario['valor'];
+				break;
+			default:
+				print_r(json_encode($this->gerarRetorno(FALSE, "Operação não implementada.")));
+				die();
+				break;
+		}
+
+		$this->db->trans_begin();
+
+		$idXP = $this->PontosUsuarioModel->inserirRetornaId($model);
+
+		if ($idXP) {
+			$this->db->trans_complete();
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao definir o XP.")));
+			} else {
+				$this->db->trans_commit();
+				$retorno = $this->gerarRetorno(TRUE, "Sucesso ao definir o XP.");
+				unset($model['data_cadastro']);
+				unset($model['id_usuario']);
+				$retorno['data'] = $model;
+				print_r(json_encode($retorno));
+			}
+		} else {
+			$this->db->trans_rollback();
+			print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao definir o XP.")));
+		}
+	}
+
 	public function situacaoCadastroUsuarioMobile() {
 		$id = $this->uri->segment(4);
 
