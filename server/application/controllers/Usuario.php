@@ -4,6 +4,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Usuario extends MY_Controller
 {
 
+	public function situacaoCadastroUsuarioMobile() {
+		$id = $this->uri->segment(4);
+
+		$usuario = $this->UsuarioModel->buscarPorId($id, 'id_usuario');
+
+		if (is_null($usuario)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário não encontrado.")));
+			die();
+		}
+
+		$pessoa = $this->PessoaModel->buscarPorId($usuario['id_pessoa'], 'id_pessoa');
+
+		if (is_null($pessoa)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário não encontrado.")));
+			die();
+		}
+
+		$mensagens = [];
+
+		if (!$this->validarEntrada($pessoa, 'celular')) {
+			$mensagens[] = "Celular não informado.";
+		}
+
+		if (!$this->validarEntrada($pessoa, 'id_cidade')) {
+			$mensagens[] = "Cidade não informada.";
+		}
+
+		if (!$this->validarEntrada($pessoa, 'id_bairro')) {
+			$mensagens[] = "Bairro não informado.";
+		}
+
+		if (!$this->validarEntrada($pessoa, 'id_logradouro')) {
+			$mensagens[] = "Logradouro não informado.";
+		}
+
+		if (!$this->validarEntrada($pessoa, 'numero')) {
+			$mensagens[] = "Número não informado.";
+		}
+
+		$retorno = array();
+		$retorno['status'] = count($mensagens) > 0;
+		$retorno['mensagens'] = $mensagens;
+
+		print_r(json_encode($retorno));
+
+	}
+
 	public function criarUsuarioMobile()
 	{
 		$data = $this->security->xss_clean($this->input->raw_input_stream);
