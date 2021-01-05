@@ -206,6 +206,20 @@ class Usuario extends MY_Controller
 	{
 		$lista = $this->UsuarioModel->buscarComboVereadores();
 
+		foreach ($lista as $key => $value) {
+			$imagem = $value['imagem'];
+
+			if (!file_exists($imagem)) {
+				$imagem = __DIR__ . "/../../../src/app/layout/img/perfil.jpg";
+			}
+
+			$type = pathinfo($imagem, PATHINFO_EXTENSION);
+			$data = file_get_contents($imagem);
+			$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+			$lista[$key]['imagem'] = $base64;
+		}
+
 		$array = array('data' => array('vereadores' => $lista));
 		print_r(json_encode($array));
 	}

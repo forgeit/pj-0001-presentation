@@ -141,6 +141,22 @@ class Demanda extends MY_Controller {
 		$dados = $this->DemandaModel->buscarPorIdCompleto($this->uri->segment(3));
 		$arquivos = $this->DemandaArquivoModel->buscarArquivosPorIdDemanda($this->uri->segment(3));
 
+		if (is_array($arquivos) && count($arquivos) > 0) {
+			foreach ($arquivos as $key => $value) {
+				$imagem = $value['arquivo'];
+
+				if (!file_exists($imagem)) {
+					continue;
+				}
+
+				$type = pathinfo($imagem, PATHINFO_EXTENSION);
+				$data = file_get_contents($imagem);
+				$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+				$arquivos[$key]['base64'] = $base64;
+			}
+		}
+
 		$fluxo = $this->DemandaFluxoModel->buscarFluxoPorIdDemanda($this->uri->segment(3));
 
 		foreach ($fluxo as $key => $value) {
@@ -153,6 +169,7 @@ class Demanda extends MY_Controller {
 		$dados['prazoFinal'] = $dados['prazoFinal'] == '00/00/0000' ? 'Não Informado' : $dados['prazoFinal'];
 		$dados['prazoFinal'] = $dados['prazoFinal'] == '' ? 'Não Informado' : $dados['prazoFinal'];
 		$dados['descricao'] = $dados['descricao'] == '' ? 'Não Informado' : $dados['descricao'];
+		$dados['id_vereador_responsavel'] = $dados['id_vereador_responsavel'];
 		$dados['arquivos'] = $arquivos;
 		$dados['fluxo'] = $fluxo;
 

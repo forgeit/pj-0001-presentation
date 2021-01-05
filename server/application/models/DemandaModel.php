@@ -111,7 +111,8 @@ class DemandaModel extends MY_Model {
 				td.descricao AS tipoDemanda,
 				DATE_FORMAT(d.prazo_final, '%d/%m/%Y') AS prazoFinal,
 				d.descricao AS descricao,
-				d.id_situacao
+				d.id_situacao,
+				d.id_vereador_responsavel
 				FROM demanda d
 				JOIN pessoa p ON p.id_pessoa = d.id_solicitante
 				JOIN tipo_demanda td ON td.id_tipo_demanda = d.id_tipo_demanda
