@@ -101,11 +101,11 @@ class Demanda extends MY_Controller {
 	}
 
 	public function gerarImagem($base64, $nome) {
-		if (!file_exists("/home/forge821/dados/demandas/fotos/")) {
+		if (!file_exists("/home1/forge821/dados/sistema/demandas/fotos/")) {
 			return null;
 		}
 
-		$folderPath =  "/home/forge821/dados/demandas/fotos/" . date('Ymd') . "/";
+		$folderPath =  "/home1/forge821/dados/sistema/demandas/fotos/" . date('Ymd') . "/";
 
 		if (!file_exists($folderPath)) {
 			mkdir($folderPath, 0755, true);

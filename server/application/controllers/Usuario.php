@@ -4,7 +4,141 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Usuario extends MY_Controller
 {
 
-	public function definirXPUsuarioMobile() {
+	public function definirDadosPerfilMobile()
+	{
+		$data = $this->security->xss_clean($this->input->raw_input_stream);
+		$entrada = json_decode($data, true);
+
+		$id = $this->uri->segment(4);
+
+		$usuario = $this->UsuarioModel->buscarPorId($id, 'id_usuario');
+
+		if (is_null($usuario)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário não encontrado.")));
+			die();
+		}
+
+		$pessoa = $this->PessoaModel->buscarPorId($usuario['id_pessoa'], 'id_pessoa');
+
+		if (is_null($pessoa)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário não encontrado.")));
+			die();
+		}
+
+		if ($this->validarEntrada($entrada, 'id_cidade')) {
+			$cidade = $this->CidadeModel->buscarPorId($entrada['id_cidade'], 'id_cidade');
+
+			if (is_null($cidade)) {
+				print_r(json_encode($this->gerarRetorno(FALSE, "Cidade inválida.")));
+				die();
+			} else {
+				$pessoa['id_cidade'] = $entrada['id_cidade'];
+			}
+		} else {
+			$pessoa['id_cidade'] = null;
+		}
+
+		if ($this->validarEntrada($entrada, 'id_bairro')) {
+			$bairro = $this->BairroModel->buscarPorId($entrada['id_bairro'], 'id_bairro');
+			if (is_null($bairro)) {
+				print_r(json_encode($this->gerarRetorno(FALSE, "Bairro inválido.")));
+				die();
+			} else {
+				$pessoa['id_bairro'] = $entrada['id_bairro'];
+			}
+		} else {
+			$pessoa['id_bairro'] = null;
+		}
+
+		if ($this->validarEntrada($entrada, 'id_logradouro')) {
+			$logradouro = $this->LogradouroModel->buscarPorId($entrada['id_logradouro'], 'id_logradouro');
+			if (is_null($logradouro)) {
+				print_r(json_encode($this->gerarRetorno(FALSE, "Logradouro inválido.")));
+				die();
+			} else {
+				$pessoa['id_logradouro'] = $entrada['id_logradouro'];
+			}
+		} else {
+			$pessoa['id_logradouro'] = null;
+		}
+
+		if ($this->validarEntrada($entrada, 'imagem')) {
+			$imagem = $this->gerarImagem($entrada['imagem'], $usuario['id_usuario'] . "-" . $pessoa['id_pessoa'] . ".jpg");
+			$usuario['imagem'] = $imagem;
+		} else {
+			$usuario['imagem'] = null;
+		}
+
+		if ($this->validarEntrada($entrada, 'celular')) {
+			$pessoa['celular'] = $entrada['celular'];
+		} else {
+			$pessoa['celular'] = null;
+		}
+
+		if ($this->validarEntrada($entrada, 'telefone')) {
+			$pessoa['telefone'] = $entrada['telefone'];
+		} else {
+			$pessoa['telefone'] = null;
+		}
+
+		if ($this->validarEntrada($entrada, 'numero')) {
+			$pessoa['numero'] = $entrada['numero'];
+		} else {
+			$pessoa['numero'] = null;
+		}
+
+		$this->db->trans_begin();
+
+		if ($this->UsuarioModel->atualizar($usuario['id_usuario'], $usuario, 'id_usuario')) {
+			if ($this->PessoaModel->atualizar($pessoa['id_pessoa'], $pessoa, 'id_pessoa')) {
+				$this->db->trans_complete();
+
+				if ($this->db->trans_status() === FALSE) {
+					$this->db->trans_rollback();
+					print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao definir os dados do perfil.")));
+				} else {
+					$this->db->trans_commit();
+					print_r(json_encode($this->gerarRetorno(TRUE, "Sucesso ao atualizar os dados.")));
+				}
+			} else {
+				$this->db->trans_rollback();
+				print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao definir os dados do perfil.")));
+			}
+		} else {
+			$this->db->trans_rollback();
+			print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao definir os dados do perfil.")));
+		}
+	}
+
+	public function gerarImagem($base64, $nome)
+	{
+		if (!file_exists("/home1/forge821/dados/sistema/usuario/fotos/")) {
+			if (!mkdir("/home1/forge821/dados/sistema/usuario/fotos/")) {
+				return null;
+			}
+		}
+
+		$folderPath =  "/home1/forge821/dados/sistema/usuario/fotos/" . date('Ymd') . "/";
+
+		if (!file_exists($folderPath)) {
+			mkdir($folderPath, 0755, true);
+		}
+
+		$image_base64 = base64_decode($base64);
+
+		$file = $folderPath . uniqid() . '-' . $nome;
+
+		file_put_contents($file, $image_base64);
+
+		if (file_exists($file)) {
+			return $file;
+		} else {
+			return null;
+		}
+	}
+
+	public function definirXPUsuarioMobile()
+	{
 		$data = $this->security->xss_clean($this->input->raw_input_stream);
 		$usuario = json_decode($data, true);
 
@@ -29,13 +163,13 @@ class Usuario extends MY_Controller
 			$model = array(
 				'id_usuario' => $usuario['usuario'],
 				'valor' => 0,
-				'data_cadastro' => date('Y-m-d')
+				'data_cadastro' => date('Y-m-d H:i:s')
 			);
 		} else {
 			$model = array(
 				'id_usuario' => $usuario['usuario'],
 				'valor' => $pontos[0]['xp'],
-				'data_cadastro' => date('Y-m-d')
+				'data_cadastro' => date('Y-m-d H:i:s')
 			);
 		}
 
@@ -72,7 +206,8 @@ class Usuario extends MY_Controller
 		}
 	}
 
-	public function situacaoCadastroUsuarioMobile() {
+	public function situacaoCadastroUsuarioMobile()
+	{
 		$id = $this->uri->segment(4);
 
 		$usuario = $this->UsuarioModel->buscarPorId($id, 'id_usuario');
@@ -116,7 +251,6 @@ class Usuario extends MY_Controller
 		$retorno['mensagens'] = $mensagens;
 
 		print_r(json_encode($retorno));
-
 	}
 
 	public function criarUsuarioMobile()
@@ -133,7 +267,6 @@ class Usuario extends MY_Controller
 			print_r(json_encode($this->gerarRetorno(FALSE, "Email é obrigatório.")));
 			die();
 		} else {
-
 		}
 
 		if (!$this->validarEntrada($usuario, 'cpf')) {
