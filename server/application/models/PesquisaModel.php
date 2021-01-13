@@ -27,5 +27,34 @@ class PesquisaModel extends MY_Model {
         } else {
             return null;
         }
+    }
+    
+
+    function buscarMinhasPesquisas($usuario) {
+		$sql = "SELECT 
+                p.id_pesquisa as id,
+                p.titulo,
+                p.imagem,
+                p.resumo,
+                p.data_validade as validade,
+                p.data_criacao  as criacao,
+                u.nome as responsavel,
+                u.imagem  as foto_perfil,
+                po.titulo as opcao,
+                pv.data_registro as data_voto
+                FROM pesquisa_voto pv 
+                JOIN pesquisa_opcao po ON pv.id_pesquisa_opcao = po.id_pesquisa_opcao 
+                JOIN pesquisa p ON p.id_pesquisa = po.id_pesquisa 
+                JOIN usuario u ON u.id_usuario = p.id_usuario_responsavel 
+                WHERE pv.id_usuario = ?
+                ORDER BY pv.data_registro";
+
+        $query = $this->db->query($sql, array($usuario));
+
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
 	}
 }
