@@ -88,3 +88,5 @@ $route['mobile/usuario/definir-xp'] = 'usuario/definirXPUsuarioMobile';
 $route['mobile/usuario/atualizar-perfil/(:num)'] = 'usuario/definirDadosPerfilMobile';
 $route['mobile/usuario/situacao/(:num)'] = 'usuario/situacaoCadastroUsuarioMobile';
 $route['mobile/vereadores/combo'] = 'usuario/buscarVereadoresMobile';
+$route['mobile/pesquisa/buscar/(:num)'] = 'pesquisa/buscarUltimaPesquisaMobile';
+$route['mobile/pesquisa/minhas-pesquisas/(:num)'] = 'pesquisa/buscarMinhasPesquisasMobile';
