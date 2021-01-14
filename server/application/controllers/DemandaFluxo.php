@@ -108,18 +108,18 @@ class DemandaFluxo extends MY_Controller {
 		}
 	}
 
-	private function gerarRetorno($response, $mensagem) {
-		$message = array();
-		$message[] = $response == TRUE ? 
-			array('tipo' => 'success', 'mensagem' => $mensagem) : 
-			array('tipo' => 'error', 'mensagem' => $mensagem);
+	// private function gerarRetorno($response, $mensagem) {
+	// 	$message = array();
+	// 	$message[] = $response == TRUE ? 
+	// 		array('tipo' => 'success', 'mensagem' => $mensagem) : 
+	// 		array('tipo' => 'error', 'mensagem' => $mensagem);
 
-		$array = array(
-			'message' => $message,
-			'status' => $response == TRUE ? 'true' : 'false'
-		);
+	// 	$array = array(
+	// 		'message' => $message,
+	// 		'status' => $response == TRUE ? 'true' : 'false'
+	// 	);
 
-		return $array;
-	}
+	// 	return $array;
+	// }
 	
 }

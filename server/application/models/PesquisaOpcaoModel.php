@@ -6,18 +6,15 @@ class PesquisaOpcaoModel extends MY_Model {
 		$this->table = 'pesquisa_opcao';
 	}
 
-	// function buscarTodosPorCidade($cidade) {
-	// 	$sql = "SELECT 
-	// 			id_bairro, nome
-	// 			FROM bairro
-	// 			WHERE id_cidade = ? ORDER BY nome";
+	function buscarPorPesquisa($pesquisa) {
+		$sql = "SELECT * FROM pesquisa_opcao po WHERE id_pesquisa = ?";
 
-    //     $query = $this->db->query($sql, array($cidade));
+        $query = $this->db->query($sql, array($pesquisa));
 
-    //     if ($query->num_rows() > 0) {
-    //         return $query->result_array();
-    //     } else {
-    //         return null;
-    //     }
-	// }
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
+	}
 }

@@ -195,19 +195,19 @@ class Pessoa extends MY_Controller {
 		print_r(json_encode($array));
 	}
 
-	private function gerarRetorno($response, $mensagem) {
-		$message = array();
-		$message[] = $response == TRUE ? 
-			array('tipo' => 'success', 'mensagem' => $mensagem) : 
-			array('tipo' => 'error', 'mensagem' => $mensagem);
+	// private function gerarRetorno($response, $mensagem) {
+	// 	$message = array();
+	// 	$message[] = $response == TRUE ? 
+	// 		array('tipo' => 'success', 'mensagem' => $mensagem) : 
+	// 		array('tipo' => 'error', 'mensagem' => $mensagem);
 
-		$array = array(
-			'message' => $message,
-			'status' => $response == TRUE ? 'true' : 'false'
-		);
+	// 	$array = array(
+	// 		'message' => $message,
+	// 		'status' => $response == TRUE ? 'true' : 'false'
+	// 	);
 
-		return $array;
-	}
+	// 	return $array;
+	// }
 
 	public function salvar() {
 		$data = $this->security->xss_clean($this->input->raw_input_stream);

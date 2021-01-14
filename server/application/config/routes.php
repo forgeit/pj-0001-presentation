@@ -90,3 +90,4 @@ $route['mobile/usuario/situacao/(:num)'] = 'usuario/situacaoCadastroUsuarioMobil
 $route['mobile/vereadores/combo'] = 'usuario/buscarVereadoresMobile';
 $route['mobile/pesquisa/buscar/(:num)'] = 'pesquisa/buscarUltimaPesquisaMobile';
 $route['mobile/pesquisa/minhas-pesquisas/(:num)'] = 'pesquisa/buscarMinhasPesquisasMobile';
+$route['mobile/pesquisa/votar'] = 'pesquisaVoto/salvarMobile';

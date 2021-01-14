@@ -65,6 +65,18 @@ class Pesquisa extends CI_Controller {
                 $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                 $pesquisa['imagem'] = $base64;
             }
+
+            $pesquisaOpcoes = $this->PesquisaOpcaoModel->buscarPorPesquisa($pesquisa['id']);
+            $pesquisa['opcoes'] = [];
+
+            foreach ($pesquisaOpcoes as $key => $value) {
+                $pesquisa['opcoes'][] = array(
+                    'id' => $value['id_pesquisa_opcao'],
+                    'titulo' => $value['titulo']
+                );
+            }
+
+            
         
             print_r(json_encode(array('data' => array ('pesquisa' => $pesquisa))));
         } else {

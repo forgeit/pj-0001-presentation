@@ -58,4 +58,19 @@ class MY_Controller extends CI_Controller {
 
 		return true;
 	}
+
+	public function gerarRetorno($response, $mensagem)
+	{
+		$message = array();
+		$message[] = $response == TRUE ?
+			array('tipo' => 'success', 'mensagem' => $mensagem) :
+			array('tipo' => 'error', 'mensagem' => $mensagem);
+
+		$array = array(
+			'message' => $message,
+			'status' => $response == TRUE ? 'true' : 'false'
+		);
+
+		return $array;
+	}
 }
