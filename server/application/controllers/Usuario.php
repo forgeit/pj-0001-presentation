@@ -4,6 +4,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Usuario extends MY_Controller
 {
 
+	public function buscarXPMobile()
+	{
+		$id = $this->uri->segment(3);
+		$pontos = $this->PontosUsuarioModel->buscarPorUsuario($id);
+
+		if (is_null($pontos)) {
+			$pontos = array(
+				array('xp' => 0, 'data_cadastro' => date('Y-m-d'))
+			);
+		}
+
+		$retorno['pontos'] = $pontos;
+
+		$array = array('data' => array('Usuario' => $retorno));
+		print_r(json_encode($array));
+	}
+
 	public function definirDadosPerfilMobile()
 	{
 		$data = $this->security->xss_clean($this->input->raw_input_stream);

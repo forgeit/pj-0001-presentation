@@ -85,6 +85,7 @@ $route['mobile/demanda/salvar'] = 'demanda/criarDemandaMobile';
 $route['mobile/usuario/buscar/(:num)'] = 'usuario/buscarDadosUsuarioMobile';
 $route['mobile/usuario/criar'] = 'usuario/criarUsuarioMobile';
 $route['mobile/usuario/definir-xp'] = 'usuario/definirXPUsuarioMobile';
+$route['mobile/usuario/(:num)/xp'] = 'usuario/buscarXPMobile';
 $route['mobile/usuario/atualizar-perfil/(:num)'] = 'usuario/definirDadosPerfilMobile';
 $route['mobile/usuario/situacao/(:num)'] = 'usuario/situacaoCadastroUsuarioMobile';
 $route['mobile/vereadores/combo'] = 'usuario/buscarVereadoresMobile';
