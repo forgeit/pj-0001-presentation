@@ -82,6 +82,7 @@ $route['usuario/alterar-senha/(:num)'] = 'usuario/alterarSenha/$1';
 $route['logradouro/filtrar'] = 'logradouro/filtrar';
 $route['logradouro/salvar'] = 'logradouro/salvar';
 $route['mobile/demanda/salvar'] = 'demanda/criarDemandaMobile';
+$route['mobile/demanda/buscar/(:num)'] = 'demanda/buscarMobile';
 $route['mobile/usuario/buscar/(:num)'] = 'usuario/buscarDadosUsuarioMobile';
 $route['mobile/usuario/criar'] = 'usuario/criarUsuarioMobile';
 $route['mobile/usuario/definir-xp'] = 'usuario/definirXPUsuarioMobile';

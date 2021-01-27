@@ -136,6 +136,97 @@ class Demanda extends MY_Controller {
 		print_r(json_encode(array('data' => array ('datatables' => $lista ? $lista : array()))));
 	}
 
+	public function buscarMobile() {
+		$dados = $this->DemandaModel->buscarPorIdCompleto($this->uri->segment(4));
+		$arquivos = $this->DemandaArquivoModel->buscarArquivosPorIdDemanda($this->uri->segment(4));
+
+		if (is_array($arquivos) && count($arquivos) > 0) {
+			foreach ($arquivos as $key => $value) {
+				$imagem = $value['arquivo'];
+
+				if (!file_exists($imagem)) {
+					$arquivos[$key]['base64'] = 'error';
+					continue;
+				}
+
+				$type = pathinfo($imagem, PATHINFO_EXTENSION);
+				$data = file_get_contents($imagem);
+				$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+				$arquivos[$key]['base64'] = $base64;
+			}
+		}
+
+		$fluxo = $this->DemandaFluxoModel->buscarFluxoPorIdDemanda($this->uri->segment(4));
+
+		foreach ($fluxo as $key => $value) {
+			$fluxo[$key]['descricao'] = $value['descricao'] == '' ? 'Não Informado' : $value['descricao'];
+			$fluxo[$key]['pessoa'] = $value['pessoa'] == '' ? 'Não Informado' : $value['pessoa'];
+			$fluxo[$key]['numero_arquivos'] = $value['total'] == 0 ? 'Não Possui' : $value['total'];
+			$fluxo[$key]['data_fluxo'] = $value['tsTransacao'];
+			unset($fluxo[$key]['total']);
+			unset($fluxo[$key]['tsTransacao']);
+
+			$arquivosFluxo = $this->DemandaArquivoFluxoModel->buscarArquivosPorIdFluxo($value['id_demanda_fluxo']);
+			
+			if (is_array($arquivosFluxo) && count($arquivosFluxo) > 0) {
+				foreach ($arquivosFluxo as $keyImg => $img) {
+					$imagem = $img['arquivo'];
+	
+					if (!file_exists($imagem)) {
+						$arquivosFluxo[$keyImg]['base64'] = 'error';
+						continue;
+					}
+	
+					$type = pathinfo($imagem, PATHINFO_EXTENSION);
+					$data = file_get_contents($imagem);
+					$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+	
+					$arquivosFluxo[$keyImg]['base64'] = $base64;
+				}
+			}
+
+			$fluxo[$key]['arquivos'] = $arquivosFluxo;
+		}
+
+		$vereador = $this->UsuarioModel->buscarPorId($dados['id_vereador_responsavel'], 'id_usuario');
+		$situacao = $this->SituacaoModel->buscarPorId($dados['id_situacao'], 'id_situacao');
+
+		if (is_null($vereador)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Vereador não encontrado na base de dados.")));
+			die();	
+		}
+
+		if (file_exists($vereador['imagem'])) {
+			$type = pathinfo($vereador['imagem'], PATHINFO_EXTENSION);
+			$data = file_get_contents($vereador['imagem']);
+			$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+		} else {
+			$base64 = 'error';
+		}
+
+		$dados['vereador'] = array(
+			'nome' => $vereador['nome'],
+			'foto' => $base64
+		);
+
+		$dados['situacao'] = $situacao['descricao'];
+		unset($dados['id_situacao']);
+		
+		$dados['abertura'] = $dados['dtContato'] == '00/00/0000' ? 'Não Informado' : $dados['dtContato'];
+		$dados['prazoFinal'] = $dados['prazoFinal'] == '00/00/0000' ? 'Não Informado' : $dados['prazoFinal'];
+		$dados['prazoFinal'] = $dados['prazoFinal'] == '' ? 'Não Informado' : $dados['prazoFinal'];
+		$dados['descricao'] = $dados['descricao'] == '' ? 'Não Informado' : $dados['descricao'];
+		unset($dados['id_vereador_responsavel']);
+		unset($dados['dtContato']);
+		$dados['arquivos'] = $arquivos;
+		$dados['fluxo'] = $fluxo;
+
+		$array = array('data' => $dados);
+
+		print_r(json_encode($array));
+	}
+
 	public function buscar() {
 
 		$dados = $this->DemandaModel->buscarPorIdCompleto($this->uri->segment(3));

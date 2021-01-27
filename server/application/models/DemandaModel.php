@@ -126,4 +126,30 @@ class DemandaModel extends MY_Model {
             return null;
         }
 	}	
+
+	function buscarDadosPorID($id) {
+		$sql = "select
+				d.id_demanda,
+				d.titulo,
+				d.descricao,
+				d.dt_criacao,
+				d.dt_contato,
+				d.prazo_final,
+				s2.descricao as situacao,
+				u3.id_usuario as id_vereador,
+				u3.nome as vereador,
+				u3.imagem as foto_vereador
+				from demanda d
+				join situacao s2 on s2.id_situacao = d.id_situacao 
+				left join usuario u3 on u3.id_usuario = d.id_vereador_responsavel 
+				where id_demanda = ?";
+
+        $query = $this->db->query($sql, array($id));
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        } else {
+            return null;
+        }
+	}	
 }
