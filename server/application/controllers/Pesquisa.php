@@ -35,6 +35,12 @@ class Pesquisa extends CI_Controller {
         }
     }
 
+    public function buscarTotalPesquisaSemResposta() {
+        $dados = $this->PesquisaModel->buscarTotalSemResposta($this->uri->segment(4));
+
+        print_r(json_encode($dados));
+	}
+
 	public function buscarUltimaPesquisaMobile() {
         $dados = $this->PesquisaModel->buscarPesquisaUsuario($this->uri->segment(4));
 
