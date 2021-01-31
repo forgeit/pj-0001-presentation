@@ -81,15 +81,21 @@ $route['situacao/combo'] = 'situacao/buscarCombo';
 $route['usuario/alterar-senha/(:num)'] = 'usuario/alterarSenha/$1';
 $route['logradouro/filtrar'] = 'logradouro/filtrar';
 $route['logradouro/salvar'] = 'logradouro/salvar';
+
+
 $route['mobile/demanda/salvar'] = 'demanda/criarDemandaMobile';
+$route['mobile/demanda/usuario/(:num)/buscar'] = 'demanda/buscarDemandasPorUsuarioMobile';
 $route['mobile/demanda/buscar/(:num)'] = 'demanda/buscarMobile';
+
 $route['mobile/usuario/buscar/(:num)'] = 'usuario/buscarDadosUsuarioMobile';
 $route['mobile/usuario/criar'] = 'usuario/criarUsuarioMobile';
 $route['mobile/usuario/definir-xp'] = 'usuario/definirXPUsuarioMobile';
 $route['mobile/usuario/(:num)/xp'] = 'usuario/buscarXPMobile';
 $route['mobile/usuario/atualizar-perfil/(:num)'] = 'usuario/definirDadosPerfilMobile';
 $route['mobile/usuario/situacao/(:num)'] = 'usuario/situacaoCadastroUsuarioMobile';
+
 $route['mobile/vereadores/combo'] = 'usuario/buscarVereadoresMobile';
+
 $route['mobile/pesquisa/buscar/(:num)'] = 'pesquisa/buscarUltimaPesquisaMobile';
 $route['mobile/pesquisa/minhas-pesquisas/(:num)'] = 'pesquisa/buscarMinhasPesquisasMobile';
 $route['mobile/pesquisa/votar'] = 'pesquisaVoto/salvarMobile';

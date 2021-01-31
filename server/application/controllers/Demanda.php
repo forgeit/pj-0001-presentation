@@ -100,6 +100,11 @@ class Demanda extends MY_Controller {
 		}
 	}
 
+	public function buscarDemandasPorUsuarioMobile() {
+		$lista = $this->DemandaModel->buscarPorUsuario($this->uri->segment(4));
+		print_r(json_encode(array('data' => array ('datatables' => $lista ? $lista : array()))));
+	}
+
 	public function gerarImagem($base64, $nome) {
 		if (!file_exists("/home1/forge821/dados/sistema/demandas/fotos/")) {
 			return null;

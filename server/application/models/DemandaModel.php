@@ -33,6 +33,31 @@ class DemandaModel extends MY_Model {
         }
 	}	
 
+	function buscarPorUsuario($id) {
+		$sql = "SELECT
+				d.id_demanda,
+				d.titulo,
+				DATE_FORMAT(dt_criacao,'%d/%m/%Y') AS dt_criacao,
+				CASE WHEN prazo_final IS NULL THEN '-' ELSE DATE_FORMAT(prazo_final,'%d/%m/%Y') END AS prazo_final,
+				s.descricao AS situacao,
+				p.nome AS solicitante,
+				d.dt_criacao
+				FROM demanda d
+				JOIN tipo_demanda td ON td.id_tipo_demanda = d.id_tipo_demanda
+				JOIN situacao s ON s.id_situacao = d.id_situacao
+				JOIN pessoa p ON p.id_pessoa = d.id_solicitante
+				JOIN usuario u ON p.id_pessoa = u.id_pessoa
+				WHERE u.id_usuario = ?";
+
+        $query = $this->db->query($sql, array($id));
+
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
+	}	
+
 	function buscarPorDataNativo($data) {
 		$sql = "SELECT
 				d.id_demanda,
