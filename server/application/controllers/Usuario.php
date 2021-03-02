@@ -322,11 +322,28 @@ class Usuario extends MY_Controller
 
 		$pessoa = array();
 		$pessoa['nome'] = $usuario['nome'];
+
+		if (isset($usuario['endereco'])) {
+			$endereco = $usuario['endereco'];
+
+			if (isset($endereco['cidade'])) {
+				$pessoa['id_cidade'] = $endereco['cidade'];
+			}
+
+			if (isset($endereco['bairro'])) {
+				$pessoa['id_bairro'] = $endereco['bairro'];
+			}
+		}
+
 		$pessoa['email'] = $usuario['login'];
 		$pessoa['cpf_cnpj'] = $usuario['cpf'];
 		$pessoa['id_tipo_pessoa'] = 4;
 		$pessoa['fg_tipo_pessoa'] = TRUE;
 		unset($usuario['cpf']);
+
+		if (isset($usuario['endereco'])) {
+			unset($usuario['endereco']);
+		}
 
 		$this->db->trans_begin();
 
