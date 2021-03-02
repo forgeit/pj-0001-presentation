@@ -5,6 +5,39 @@ class Demanda extends MY_Controller {
 
 	private $DEMANDA_PENDENTE_DE_VALIDACAO = 7;
 
+	public function vincularVereador() {
+		$idDemanda =  $this->uri->segment(3);
+		$idVereador =  $this->uri->segment(5);
+
+		$usuario = $this->UsuarioModel->buscarPorId($idVereador, 'id_usuario');
+		$demanda = $this->DemandaModel->buscarPorId($idDemanda, 'id_demanda');
+
+		if(is_null($usuario) || is_null($demanda)) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Demanda ou vereador inválido.")));
+			die();
+		}
+
+		if (!$usuario['flag_vereador']) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Usuário não é um vereador.")));
+			die();
+		}
+		
+		$demanda['id_vereador_responsavel'] = $usuario['id_usuario'];
+
+		if ($demanda['id_situacao'] >= 3) {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Não é mais possível alterar o vereador.")));
+			die();
+		}
+
+		if ($this->DemandaModel->atualizar($idDemanda, $demanda, 'id_demanda')) {
+			print_r(json_encode($this->gerarRetorno(TRUE, "Vinculado com sucesso.")));
+			die();
+		} else {
+			print_r(json_encode($this->gerarRetorno(FALSE, "Erro ao vincular vereador a demanda.")));
+			die();
+		}
+	}
+
 	public function getImagem()
     {
 		$id =  $this->uri->segment(3);

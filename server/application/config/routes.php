@@ -84,6 +84,7 @@ $route['logradouro/salvar'] = 'logradouro/salvar';
 
 
 $route['mobile/demanda/salvar'] = 'demanda/criarDemandaMobile';
+$route['mobile/demanda/(:num)/vereador/(:num)/vincular'] = 'demanda/vincularVereador';
 $route['mobile/demanda/usuario/(:num)/buscar'] = 'demanda/buscarDemandasPorUsuarioMobile';
 $route['mobile/demanda/buscar/(:num)'] = 'demanda/buscarMobile';
 
