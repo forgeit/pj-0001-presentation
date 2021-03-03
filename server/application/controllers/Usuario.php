@@ -255,13 +255,6 @@ class Usuario extends MY_Controller
 			$mensagens[] = "Bairro não informado.";
 		}
 
-		if (!$this->validarEntrada($pessoa, 'id_logradouro')) {
-			$mensagens[] = "Logradouro não informado.";
-		}
-
-		if (!$this->validarEntrada($pessoa, 'numero')) {
-			$mensagens[] = "Número não informado.";
-		}
 
 		$retorno = array();
 		$retorno['status'] = count($mensagens) > 0;
