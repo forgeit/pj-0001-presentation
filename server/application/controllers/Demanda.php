@@ -38,6 +38,19 @@ class Demanda extends MY_Controller {
 		}
 	}
 
+	public function getArquivo()
+    {
+		$id =  $this->uri->segment(4);
+		
+		$model = $this->DemandaArquivoModel->buscarArquivo($id);
+
+		$img = $model[0]['arquivo'];
+
+        $info = getimagesize($img);
+        header('Content-type: ' . $info['mime']);
+        readfile($img);
+    }
+
 	public function getImagem()
     {
 		$id =  $this->uri->segment(3);
@@ -175,23 +188,18 @@ class Demanda extends MY_Controller {
 	}
 
 	public function buscarMobile() {
+		$URL_BASE_IMG = 'http://vereador.forgeit.com.br/server/mobile/demanda/arquivo/';
+		$URL_BASE_IMG_HIST = 'http://vereador.forgeit.com.br/server/mobile/demanda/historico/arquivo/';
+		$URL_BASE_IMG_VEREADOR = 'http://vereador.forgeit.com.br/server/mobile/vereador/foto/';
+		
 		$dados = $this->DemandaModel->buscarPorIdCompleto($this->uri->segment(4));
 		$arquivos = $this->DemandaArquivoModel->buscarArquivosPorIdDemanda($this->uri->segment(4));
 
 		if (is_array($arquivos) && count($arquivos) > 0) {
 			foreach ($arquivos as $key => $value) {
-				$imagem = $value['arquivo'];
-
-				if (!file_exists($imagem)) {
-					$arquivos[$key]['base64'] = 'error';
-					continue;
-				}
-
-				$type = pathinfo($imagem, PATHINFO_EXTENSION);
-				$data = file_get_contents($imagem);
-				$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-				$arquivos[$key]['base64'] = $base64;
+				$arquivos[$key]['imagem'] = $URL_BASE_IMG . $value['id_demanda_arquivo'];
+				unset($arquivos[$key]['arquivo']);
+				unset($arquivos[$key]['id_demanda_arquivo']);
 			}
 		}
 
@@ -209,18 +217,10 @@ class Demanda extends MY_Controller {
 			
 			if (is_array($arquivosFluxo) && count($arquivosFluxo) > 0) {
 				foreach ($arquivosFluxo as $keyImg => $img) {
-					$imagem = $img['arquivo'];
-	
-					if (!file_exists($imagem)) {
-						$arquivosFluxo[$keyImg]['base64'] = 'error';
-						continue;
-					}
-	
-					$type = pathinfo($imagem, PATHINFO_EXTENSION);
-					$data = file_get_contents($imagem);
-					$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-	
-					$arquivosFluxo[$keyImg]['base64'] = $base64;
+					$arquivosFluxo[$keyImg]['imagem'] = $URL_BASE_IMG_HIST . $img['id_demanda_arquivo_fluxo'];
+					unset($arquivosFluxo[$keyImg]['arquivo']);
+					unset($arquivosFluxo[$keyImg]['id_demanda_arquivo_fluxo']);
+					unset($arquivosFluxo[$keyImg]['id_demanda_fluxo']);
 				}
 			}
 
@@ -230,24 +230,15 @@ class Demanda extends MY_Controller {
 		$vereador = $this->UsuarioModel->buscarPorId($dados['id_vereador_responsavel'], 'id_usuario');
 		$situacao = $this->SituacaoModel->buscarPorId($dados['id_situacao'], 'id_situacao');
 
-		if (is_null($vereador)) {
-			print_r(json_encode($this->gerarRetorno(FALSE, "Vereador não encontrado na base de dados.")));
-			die();	
+		$naoRetornarVereador = is_null($vereador) || !$vereador;
+
+		if (!$naoRetornarVereador) {
+			$dados['vereador'] = array(
+				'nome' => $vereador['nome'],
+				'foto' => $URL_BASE_IMG_VEREADOR . $vereador['id_usuario']
+			);
 		}
-
-		if (file_exists($vereador['imagem'])) {
-			$type = pathinfo($vereador['imagem'], PATHINFO_EXTENSION);
-			$data = file_get_contents($vereador['imagem']);
-			$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-		} else {
-			$base64 = 'error';
-		}
-
-		$dados['vereador'] = array(
-			'nome' => $vereador['nome'],
-			'foto' => $base64
-		);
-
+		
 		$dados['situacao'] = $situacao['descricao'];
 		unset($dados['id_situacao']);
 		

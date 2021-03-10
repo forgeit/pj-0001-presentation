@@ -3,6 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class DemandaFluxo extends MY_Controller {
 
+	public function getArquivo()
+    {
+		$id =  $this->uri->segment(5);
+		
+		$model = $this->DemandaArquivoFluxoModel->buscarArquivo($id);
+
+		$img = $model[0]['arquivo'];
+
+        $info = getimagesize($img);
+        header('Content-type: ' . $info['mime']);
+        readfile($img);
+    }
+
 	public function buscarArquivos() {	
 		$lista = $this->DemandaFluxoModel->buscarArquivosPorDemanda($this->uri->segment(3));
 		print_r(json_encode(array('data' => array ('ArrayList' => $lista ? $lista : array()))));

@@ -4,6 +4,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Usuario extends MY_Controller
 {
 
+	public function getArquivo()
+    {
+		$id =  $this->uri->segment(4);
+		
+		$usuario = $this->UsuarioModel->buscarPorId($id, 'id_usuario');
+
+		$img = $usuario['imagem'];
+
+        $info = getimagesize($img);
+        header('Content-type: ' . $info['mime']);
+        readfile($img);
+    }
+
+
 	public function buscarXPMobile()
 	{
 		$id = $this->uri->segment(3);

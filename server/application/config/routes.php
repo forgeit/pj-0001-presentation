@@ -87,8 +87,11 @@ $route['mobile/demanda/salvar'] = 'demanda/criarDemandaMobile';
 $route['mobile/demanda/(:num)/vereador/(:num)/vincular'] = 'demanda/vincularVereador';
 $route['mobile/demanda/usuario/(:num)/buscar'] = 'demanda/buscarDemandasPorUsuarioMobile';
 $route['mobile/demanda/buscar/(:num)'] = 'demanda/buscarMobile';
+$route['mobile/demanda/arquivo/(:num)'] = 'demanda/getArquivo';
+$route['mobile/demanda/historico/arquivo/(:num)'] = 'demandaFluxo/getArquivo';
 
 $route['mobile/usuario/buscar/(:num)'] = 'usuario/buscarDadosUsuarioMobile';
+$route['mobile/vereador/foto/(:num)'] = 'usuario/getArquivo';
 $route['mobile/usuario/criar'] = 'usuario/criarUsuarioMobile';
 $route['mobile/usuario/definir-xp'] = 'usuario/definirXPUsuarioMobile';
 $route['mobile/usuario/(:num)/xp'] = 'usuario/buscarXPMobile';
