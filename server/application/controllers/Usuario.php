@@ -392,6 +392,7 @@ class Usuario extends MY_Controller
 			print_r(json_encode($this->gerarRetorno(FALSE, "Ocorreu um erro ao criar o usuário.")));
 		}
 	}
+	
 
 	public function buscarVereadoresMobile()
 	{
