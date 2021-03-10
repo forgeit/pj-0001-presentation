@@ -4,6 +4,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Usuario extends MY_Controller
 {
 
+	public function getFoto()
+    {
+		$id =  $this->uri->segment(4);
+		
+		$usuario = $this->UsuarioModel->buscarPorId($id, 'id_usuario');
+
+		$img = $usuario['imagem'];
+
+		if (!file_exists($img)) {
+			$img = __DIR__ . "/../../../src/app/layout/img/perfil.jpg";
+		}
+
+        $info = getimagesize($img);
+        header('Content-type: ' . $info['mime']);
+        readfile($img);
+    }
+
 	public function getArquivo()
     {
 		$id =  $this->uri->segment(4);
@@ -378,20 +395,11 @@ class Usuario extends MY_Controller
 
 	public function buscarVereadoresMobile()
 	{
+		$URL_BASE_IMG_VEREADOR = 'http://vereador.forgeit.com.br/server/mobile/vereador/foto/';
 		$lista = $this->UsuarioModel->buscarComboVereadores();
 
 		foreach ($lista as $key => $value) {
-			$imagem = $value['imagem'];
-
-			if (!file_exists($imagem)) {
-				$imagem = __DIR__ . "/../../../src/app/layout/img/perfil.jpg";
-			}
-
-			$type = pathinfo($imagem, PATHINFO_EXTENSION);
-			$data = file_get_contents($imagem);
-			$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-			$lista[$key]['imagem'] = $base64;
+			$lista[$key]['imagem'] = $URL_BASE_IMG_VEREADOR . $value['id'];
 		}
 
 		$array = array('data' => array('vereadores' => $lista));
@@ -400,6 +408,7 @@ class Usuario extends MY_Controller
 
 	public function buscarDadosUsuarioMobile()
 	{
+		$URL_BASE_IMG_USUARIO = 'http://vereador.forgeit.com.br/server/mobile/usuario/foto/';
 		$id = $this->uri->segment(4);
 
 		$usuario = $this->UsuarioModel->buscarPorId($id, 'id_usuario');
@@ -424,15 +433,10 @@ class Usuario extends MY_Controller
 
 		$imagem = $usuario['imagem'];
 
-		if (!file_exists($imagem)) {
-			$imagem = __DIR__ . "/../../../src/app/layout/img/perfil.jpg";
-		}
-
-		$type = pathinfo($imagem, PATHINFO_EXTENSION);
-		$data = file_get_contents($imagem);
-		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-		$retorno['imagem'] = $base64;
+		
+		$imagem = $URL_BASE_IMG_USUARIO . $id;
+		
+		$retorno['imagem'] = $imagem;
 
 		$retorno['dadosPessoais'] = array();
 		$retorno['dadosPessoais']['email'] = $pessoa['email'];

@@ -92,6 +92,7 @@ $route['mobile/demanda/historico/arquivo/(:num)'] = 'demandaFluxo/getArquivo';
 
 $route['mobile/usuario/buscar/(:num)'] = 'usuario/buscarDadosUsuarioMobile';
 $route['mobile/vereador/foto/(:num)'] = 'usuario/getArquivo';
+$route['mobile/usuario/foto/(:num)'] = 'usuario/getFoto';
 $route['mobile/usuario/criar'] = 'usuario/criarUsuarioMobile';
 $route['mobile/usuario/definir-xp'] = 'usuario/definirXPUsuarioMobile';
 $route['mobile/usuario/(:num)/xp'] = 'usuario/buscarXPMobile';
