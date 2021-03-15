@@ -195,13 +195,19 @@ class Demanda extends MY_Controller {
 		$dados = $this->DemandaModel->buscarPorIdCompleto($this->uri->segment(4));
 		$arquivos = $this->DemandaArquivoModel->buscarArquivosPorIdDemanda($this->uri->segment(4));
 
+		$flagPossuiArquivos = false;
+		
 		if (is_array($arquivos) && count($arquivos) > 0) {
+			$flagPossuiArquivos = true;
+
 			foreach ($arquivos as $key => $value) {
 				$arquivos[$key]['imagem'] = $URL_BASE_IMG . $value['id_demanda_arquivo'];
 				unset($arquivos[$key]['arquivo']);
 				unset($arquivos[$key]['id_demanda_arquivo']);
 			}
 		}
+
+		$dados['possuiArquivo'] = $flagPossuiArquivos;
 
 		$fluxo = $this->DemandaFluxoModel->buscarFluxoPorIdDemanda($this->uri->segment(4));
 
@@ -214,8 +220,10 @@ class Demanda extends MY_Controller {
 			unset($fluxo[$key]['tsTransacao']);
 
 			$arquivosFluxo = $this->DemandaArquivoFluxoModel->buscarArquivosPorIdFluxo($value['id_demanda_fluxo']);
+			$flagPossuiArquivosHistorico = false;
 			
 			if (is_array($arquivosFluxo) && count($arquivosFluxo) > 0) {
+				$flagPossuiArquivosHistorico = true;
 				foreach ($arquivosFluxo as $keyImg => $img) {
 					$arquivosFluxo[$keyImg]['imagem'] = $URL_BASE_IMG_HIST . $img['id_demanda_arquivo_fluxo'];
 					unset($arquivosFluxo[$keyImg]['arquivo']);
@@ -225,6 +233,7 @@ class Demanda extends MY_Controller {
 			}
 
 			$fluxo[$key]['arquivos'] = $arquivosFluxo;
+			$fluxo[$key]['possuiArquivo'] = $flagPossuiArquivosHistorico;
 		}
 
 		$vereador = $this->UsuarioModel->buscarPorId($dados['id_vereador_responsavel'], 'id_usuario');
