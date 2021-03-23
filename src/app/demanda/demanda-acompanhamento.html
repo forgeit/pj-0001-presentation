@@ -169,8 +169,20 @@
 
                     <h3 class="timeline-header"><a href="#">{{ item.operador }}</a> {{ item.titulo_fluxo }}</h3>
 
-                    <div class="timeline-body" ng-if="item.exibirQuadroDescricao">
-                        {{ item.descricao }}
+                    <div class="timeline-body" ng-if="item.exibirQuadroDescricao || item.possuiArquivos">
+                        <div class="row">
+                            <div class="col-md-12" ng-if="item.exibirQuadroDescricao" style="margin-bottom: 10px;">
+                                <p>{{ item.descricao }}</p>
+                            </div>
+
+                            <div class="col-md-12" ng-if="item.possuiArquivos">
+                                <div class="col-md-2" ng-repeat="objeto in item.arquivos">
+                                    <div class="image-gallery" style="background-image: url('{{ objeto.arquivo }}');"
+                                        ng-click="vm.abrirImagem(objeto, $index)"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
 
                 </div>

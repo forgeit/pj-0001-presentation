@@ -113,10 +113,28 @@ class DemandaAcompanhamento extends MY_Controller {
                 );
             }
 
+            $arquivosFluxoRetorno = array();
+            $fluxo[$key]['possuiArquivos'] = false;
+            if ($value['total'] > 0) {
+                $arquivosFluxo = $this->DemandaArquivoFluxoModel->buscarArquivosPorIdFluxo($value['id_demanda_fluxo']);
+                
+                if (is_array($arquivosFluxo) && count($arquivosFluxo) > 0) {
+                    $fluxo[$key]['possuiArquivos'] = true;
+                    foreach ($arquivosFluxo as $keyImg => $img) {
+                        $arquivosFluxoRetorno[] = array (
+                            'arquivo' => $URL_BASE_IMG_HIST . $img['id_demanda_arquivo_fluxo'],
+                            'nome' => $img['nome']
+                        );
+                    }
+                }
+
+                $fluxo[$key]['arquivos'] = $arquivosFluxoRetorno;
+            }
+
 			$fluxo[$key]['descricao'] = $value['descricao'] == '' ? 'Não Informado' : $value['descricao'];
 			$fluxo[$key]['responsavelAtual'] = $value['pessoa'] == '' ? 'Não Informado' : $value['pessoa'];
             $fluxo[$key]['total'] = $value['total'] == 0 ? 'Não Possui' : $value['total'];
-            
+
 			unset($fluxo[$key]['total']);
 			unset($fluxo[$key]['pessoa']);
 			unset($fluxo[$key]['id_demanda_fluxo']);
