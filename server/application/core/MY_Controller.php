@@ -45,6 +45,19 @@ class MY_Controller extends CI_Controller {
 		}
 	}
 
+	public function getCodeUsuario() {
+		$code = str_replace("Bearer ", "", $this->input->get_request_header('Authorization'));
+		$this->load->library("JWT");
+
+		try {
+			$CONSUMER_SECRET = 'sistema_mathias_2016';
+
+			return $this->jwt->decode($code, $CONSUMER_SECRET, true);
+		} catch(Exception $ex) {
+			return null;
+		}
+	}
+
 	public function validarEntrada($entrada, $chave) {
 		if (!isset($entrada[$chave]) || is_null($entrada[$chave]) || !is_array($entrada)) {
 			return false;

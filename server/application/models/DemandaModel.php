@@ -152,6 +152,36 @@ class DemandaModel extends MY_Model {
         }
 	}	
 
+	function buscarPorIdAcompanhamento($id) {
+		$sql = "SELECT 
+				d.id_demanda,
+				p.nome AS solicitante, 
+				DATE_FORMAT(d.dt_contato, '%Y-%m-%dT%T') AS dataCriacaoDemanda,
+				d.titulo AS titulo,
+				td.descricao AS tipoDemanda,
+				DATE_FORMAT(d.prazo_final, '%d/%m/%Y') AS prazoFinal,
+				d.descricao AS descricao,
+				s.descricao AS situacaoAtual,
+				s.id_situacao AS situacaoAtualCod,
+				d.id_vereador_responsavel,
+				u.nome as vereador,
+				CASE WHEN d.id_vereador_responsavel IS NULL THEN false ELSE true END AS existeVereador
+				FROM demanda d
+				JOIN pessoa p ON p.id_pessoa = d.id_solicitante
+				JOIN tipo_demanda td ON td.id_tipo_demanda = d.id_tipo_demanda
+				JOIN situacao s ON s.id_situacao = d.id_situacao
+				LEFT JOIN usuario u ON u.id_usuario = d.id_vereador_responsavel
+				WHERE id_demanda = ?";
+
+        $query = $this->db->query($sql, array($id));
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        } else {
+            return null;
+        }
+	}	
+
 	function buscarDadosPorID($id) {
 		$sql = "select
 				d.id_demanda,

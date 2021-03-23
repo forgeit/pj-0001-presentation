@@ -81,6 +81,26 @@
 						}
 					]
 				}
+			})
+			.when('/demanda/:id/acompanhar', {
+				templateUrl: 'src/app/demanda/demanda-acompanhamento.html?' + new Date().getTime(),
+				controller: 'DemandaAcompanhamento',
+				controllerAs: 'vm',
+				titulo: 'Atualização de Demanda',
+				cabecalho: {
+					h1: 'Atualização de Demanda',
+					breadcrumbs: [
+						{
+							nome: 'Demandas',
+							link: 'demanda'
+						},
+						{
+							nome: 'Atualização',
+							link: 'visualizar-demanda',
+							ativo: true
+						}
+					]
+				}
 			});
 	}
 

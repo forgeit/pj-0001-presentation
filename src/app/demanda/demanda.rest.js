@@ -15,7 +15,8 @@
 			buscarArquivosPorDemandaFluxo: buscarArquivosPorDemandaFluxo,
 			salvar: salvar,
 			remover: remover,
-			salvarFluxo: salvarFluxo
+			salvarFluxo: salvarFluxo,
+			validar: validar
 		};
 
 		return service;
@@ -25,7 +26,7 @@
 		}
 
 		function buscar(data) {
-			return $http.get(configuracaoREST.url + configuracaoREST.demanda + 'buscar/' + data);
+			return $http.get(configuracaoREST.url + configuracaoREST.demandaAcompanhamento + 'buscar/' + data);
 		}
 
 		function buscarPorData(data, dia, mes, ano) {
@@ -38,6 +39,10 @@
 
 		function salvar(data) {
 			return $http.post(configuracaoREST.url + configuracaoREST.demanda + 'salvar', data);
+		}
+
+		function validar(data) {
+			return $http.post(configuracaoREST.url + configuracaoREST.demandaAcompanhamento + 'validacao', data);
 		}
 
 		function remover(data) {

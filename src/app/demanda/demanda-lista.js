@@ -28,7 +28,7 @@
 			criarOpcoesTabela();
 
 			function carregarObjeto(aData) {
-				controllerUtils.$location.path('visualizar-demanda/' + aData.id_demanda);
+				controllerUtils.$location.path('demanda/' + aData.id_demanda + '/acompanhar');
 				$scope.$apply();
 			}
 

@@ -5,6 +5,7 @@
 
 	var configuracaoREST = {
 		demanda: 'demanda/',
+		demandaAcompanhamento: 'demanda-acompanhamento/',
 		pessoa: 'pessoa/',
 		tipoDemanda: 'tipo-demanda/',
 		url: 'http://localhost:3334/server/'

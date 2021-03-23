@@ -5,19 +5,7 @@
 </div>
 
 <div class="row" ng-show="vm.uploadHabilitado">
-	<div class="col-md-6">
-		<div nv-file-drop="" uploader="vm.uploader" >
-			<div nv-file-over="" uploader="vm.uploader" over-class="another-file-over-class" class="well my-drop-zone">
-				Arraste os arquivos desejados
-			</div>
-		</div>
-	</div>
-
-	<div class="col-md-1 text-center">
-		<div class="text-center file-uploader-ou">OU</div>
-	</div>
-
-	<div class="col-md-4">
+	<div class="col-md-12">
 		<div class="form-group">
 			<label for="arquivos">Arquivos: </label>
 			<input type="file" id="arquivos" nv-file-select="" uploader="vm.uploader" multiple />

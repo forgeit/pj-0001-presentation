@@ -121,6 +121,7 @@ class Demanda extends MY_Controller {
 			'id_demanda' => $idDemanda,
 			'id_situacao' => $this->DEMANDA_PENDENTE_DE_VALIDACAO,
 			'ts_transacao' => date('Y-m-d H:i:s')
+			// 'id_usuario_operacao' => $pessoa['id_usuario']
 		);
 
 		$this->DemandaFluxoModel->inserir($demandaFluxoModel);

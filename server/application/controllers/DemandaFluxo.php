@@ -27,6 +27,7 @@ class DemandaFluxo extends MY_Controller {
 
 		$demandaFluxoModel = array();
 		$demandaFluxoModel['id_demanda'] = $this->uri->segment(3);
+		$demandaFluxoModel['id_usuario_operacao'] = $this->getCodeUsuario()->id;
 		$demandaFluxoModel['ts_transacao'] = date('Y-m-d H:i:s');
 
 		if (isset($demandaFluxo->situacao)) {
@@ -43,7 +44,7 @@ class DemandaFluxo extends MY_Controller {
 
 		if (isset($demandaFluxo->descricao)) {
 			if ($demandaFluxo->descricao) {
-				$demandaFluxoModel['descricao'] = strtoupper($demandaFluxo->descricao);
+				$demandaFluxoModel['descricao'] = $demandaFluxo->descricao;
 			}
 		}
 
