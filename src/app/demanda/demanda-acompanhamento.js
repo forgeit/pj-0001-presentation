@@ -25,11 +25,68 @@
 		vm.uploader = new FileUploader({url: configuracaoREST.url + 'upload'});
 		vm.uploader.onSuccessItem = sucessoAoEnviarArquivo;
 		vm.salvarFluxo = salvarFluxo;
+		vm.abrirModalVereadores = abrirModalVereadores;
+		vm.vereadores = [];
+		vm.novoVereador = 0;
+		
+
+		vm.preSelecionarVereador = preSelecionarVereador;
+		vm.alterarVereador = alterarVereador;
+		vm.abrirModalTrocarPrazo = abrirModalTrocarPrazo;
+		vm.alterarPrazo = alterarPrazo;
 
 		iniciar();
 
+		function alterarPrazo() {
+			if (vm.prazo) {
+				demandaRest.alterarPrazo({ prazo: vm.prazo, demanda: vm.demanda.id_demanda }).then(success).catch(error);	
+			} else {
+				toastr.error("Informe uma data.");
+			}
+
+			function error(response) {
+				toastr.error("Erro ao alterar o prazo.");
+			}
+
+			function success(response) {
+				controllerUtils.feedMessage(response);
+				if (response.data.status == 'true') {
+					$('#modalPrazo').modal('hide');
+					iniciar();
+				}
+			}
+		}
+
+		function abrirModalTrocarPrazo() {
+			$('#modalPrazo').modal('show');
+		}
+
+		function alterarVereador(vereador) {
+			demandaRest.alterarVereador(vm.demanda.id_demanda, vereador.id).then(success).catch(error);
+
+			function error(response) {
+				toastr.error("Erro ao alterar o responsável.");
+			}
+
+			function success(response) {
+				controllerUtils.feedMessage(response);
+				if (response.data.status == 'true') {
+					$('#modalVereadores').modal('hide');
+					iniciar();
+				}
+			}
+		}
+
+		function preSelecionarVereador(objeto) {
+			vm.novoVereador = objeto;
+		}
+
 		function abrirModalFluxo() {
 			$('#modalFluxo').modal('show');
+		}
+
+		function abrirModalVereadores() {
+			$('#modalVereadores').modal('show');
 		}
 
 		function habilitarDesabilitar() {
@@ -45,6 +102,32 @@
 
 			function success(response) {
 				var array = controllerUtils.getData(response, 'ArrayList');
+				return controllerUtils.promise.criar(true, array);
+			}
+		}
+
+		function carregarDestinatarios() {
+			return pessoaRest.buscarDestinatarios().then(success).catch(error);
+
+			function error(response) {
+				return controllerUtils.promise.criar(false, []);
+			}
+
+			function success(response) {
+				var array = controllerUtils.getData(response, 'destinatarios');
+				return controllerUtils.promise.criar(true, array);
+			}
+		}
+
+		function carregarVereadores() {
+			return pessoaRest.buscarComboVereadores().then(success).catch(error);
+
+			function error(response) {
+				return controllerUtils.promise.criar(false, []);
+			}
+
+			function success(response) {
+				var array = controllerUtils.getData(response, 'vereadores');
 				return controllerUtils.promise.criar(true, array);
 			}
 		}
@@ -77,6 +160,8 @@
 
 			promises.push(carregar());
 			promises.push(carregarSituacao());
+			promises.push(carregarVereadores());
+			promises.push(carregarDestinatarios());
 
 			return controllerUtils.ready(promises).then(function (values) {
 				inicializarObjetos(values);
@@ -105,9 +190,6 @@
 					value.tsTransacao = new Date(value.tsTransacao);
 					vm.fluxo.push(value);
 				});
-
-				console.log(vm.fluxo);
-				
 			} else {
 				controllerUtils.feed(controllerUtils.messageType.ERROR, 'Ocorreu um erro ao carregar a demanda.');	
 			}
@@ -116,6 +198,18 @@
 				vm.situacaoList = values[1].objeto;
 			} else {
 				controllerUtils.feed(controllerUtils.messageType.ERROR, 'Erro ao carregar as fases disponíveis.');	
+			}
+
+			if (values[2].exec) {
+				vm.vereadores = values[2].objeto;
+			} else {
+				controllerUtils.feed(controllerUtils.messageType.ERROR, 'Erro ao carregar os vereadores.');	
+			}
+
+			if (values[3].exec) {
+				vm.destinatarios = values[3].objeto;
+			} else {
+				controllerUtils.feed(controllerUtils.messageType.ERROR, 'Erro ao carregar os destinatários.');	
 			}
 		}
 

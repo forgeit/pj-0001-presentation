@@ -17,6 +17,18 @@ class UsuarioModel extends MY_Model {
             return null;
         }
 	}
+	
+	function buscarDestinarios() {
+		$sql = "SELECT id_usuario as id, nome as descricao FROM usuario WHERE NOT flag_vereador and id_usuario <> 1 ORDER BY 2";
+
+        $query = $this->db->query($sql);
+
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return null;
+        }
+	}
 
 	function verificarLogin($login, $senha) {
 

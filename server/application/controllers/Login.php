@@ -27,6 +27,8 @@ class Login extends MY_Controller {
 	}
 
 	public function generate_token($usuario){
+		$URL_BASE_IMG_USUARIO = 'http://vereador.forgeit.com.br/server/mobile/usuario/foto/';
+
     	$this->load->library("JWT");
 	    $CONSUMER_SECRET = 'sistema_mathias_2016';
 	    $CONSUMER_TTL = 1800;
@@ -34,7 +36,7 @@ class Login extends MY_Controller {
 	   	  'id' => $usuario['id_usuario'],
 	   	  'nome' => $usuario['nome'],
 	   	  'cargo' => $usuario['cargo'],
-	   	  'imagem' => $usuario['imagem'],
+	   	  'imagem' => $URL_BASE_IMG_USUARIO . $usuario['id_usuario'],
 	      'issuedAt'=> date(DATE_ISO8601, strtotime("now")),
 	      'dtBegin' => strtotime("now"),
 	      'ttl'=> $CONSUMER_TTL

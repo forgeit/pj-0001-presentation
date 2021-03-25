@@ -159,7 +159,7 @@ class DemandaModel extends MY_Model {
 				DATE_FORMAT(d.dt_contato, '%Y-%m-%dT%T') AS dataCriacaoDemanda,
 				d.titulo AS titulo,
 				td.descricao AS tipoDemanda,
-				DATE_FORMAT(d.prazo_final, '%d/%m/%Y') AS prazoFinal,
+				DATE_FORMAT(d.prazo_final, '%Y-%m-%dT%T') AS prazoFinal,
 				d.descricao AS descricao,
 				s.descricao AS situacaoAtual,
 				s.id_situacao AS situacaoAtualCod,

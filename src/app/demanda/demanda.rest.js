@@ -16,7 +16,9 @@
 			salvar: salvar,
 			remover: remover,
 			salvarFluxo: salvarFluxo,
-			validar: validar
+			validar: validar,
+			alterarVereador: alterarVereador,
+			alterarPrazo: alterarPrazo
 		};
 
 		return service;
@@ -27,6 +29,14 @@
 
 		function buscar(data) {
 			return $http.get(configuracaoREST.url + configuracaoREST.demandaAcompanhamento + 'buscar/' + data);
+		}
+
+		function alterarPrazo(demanda) {
+			return $http.post(configuracaoREST.url + configuracaoREST.demanda +  'alterar-prazo', demanda);
+		}
+
+		function alterarVereador(demanda, vereador) {
+			return $http.put(configuracaoREST.url + configuracaoREST.demanda +  demanda +  '/vereador/' + vereador + '/novo-responsavel');
 		}
 
 		function buscarPorData(data, dia, mes, ano) {

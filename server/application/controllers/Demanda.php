@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Demanda extends MY_Controller {
 
-	private $DEMANDA_PENDENTE_DE_VALIDACAO = 7;
+	private $DEMANDA_PENDENTE_DE_VALIDACAO = 2;
 
 	public function vincularVereador() {
 		$idDemanda =  $this->uri->segment(3);
@@ -46,8 +46,17 @@ class Demanda extends MY_Controller {
 
 		$img = $model[0]['arquivo'];
 
-        $info = getimagesize($img);
-        header('Content-type: ' . $info['mime']);
+		$partesNome = explode(".", $model[0]['nome']);
+		$tipo = trim($partesNome[count($partesNome) -1]);
+		$tipo = strtoupper($tipo);
+
+		if ($tipo == "PDF") {
+			header('Content-type: application/pdf');
+		} else {
+			$info = getimagesize($img);
+        	header('Content-type: ' . $info['mime']);
+		}
+
         readfile($img);
     }
 
@@ -120,8 +129,8 @@ class Demanda extends MY_Controller {
 		$demandaFluxoModel = array(
 			'id_demanda' => $idDemanda,
 			'id_situacao' => $this->DEMANDA_PENDENTE_DE_VALIDACAO,
-			'ts_transacao' => date('Y-m-d H:i:s')
-			// 'id_usuario_operacao' => $pessoa['id_usuario']
+			'ts_transacao' => date('Y-m-d H:i:s'),
+			'id_usuario_operacao' => $this->getCodeUsuario()->id
 		);
 
 		$this->DemandaFluxoModel->inserir($demandaFluxoModel);

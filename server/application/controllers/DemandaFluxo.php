@@ -11,8 +11,17 @@ class DemandaFluxo extends MY_Controller {
 
 		$img = $model[0]['arquivo'];
 
-        $info = getimagesize($img);
-        header('Content-type: ' . $info['mime']);
+        $partesNome = explode(".", $model[0]['nome']);
+		$tipo = trim($partesNome[count($partesNome) -1]);
+		$tipo = strtoupper($tipo);
+
+		if ($tipo == "PDF") {
+			header('Content-type: application/pdf');
+		} else {
+			$info = getimagesize($img);
+        	header('Content-type: ' . $info['mime']);
+		}
+
         readfile($img);
     }
 
@@ -50,7 +59,7 @@ class DemandaFluxo extends MY_Controller {
 
 		if (isset($demandaFluxo->destinatario)) {
 			if ($demandaFluxo->destinatario) {
-				$demandaFluxoModel['id_pessoa'] = $demandaFluxo->destinatario;
+				$demandaFluxoModel['id_destinatario'] = $demandaFluxo->destinatario;
 			}
 		}
 

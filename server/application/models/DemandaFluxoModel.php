@@ -55,7 +55,7 @@ class DemandaFluxoModel extends MY_Model {
 				count(daf.id_demanda_arquivo_fluxo) AS total,
 				u.nome as operador
 				from demanda_fluxo df
-				left join pessoa p on p.id_pessoa = df.id_pessoa
+				left join usuario p on p.id_usuario = df.id_destinatario
 				join situacao s on s.id_situacao = df.id_situacao
 				left join demanda_arquivo_fluxo daf on daf.id_demanda_fluxo = df.id_demanda_fluxo
 				join usuario u on u.id_usuario = df.id_usuario_operacao

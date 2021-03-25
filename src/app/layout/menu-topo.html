@@ -1,6 +1,6 @@
 <header class="main-header" ng-controller="MenuTopoController as vm" ng-show="vm.isLogged()">
     <a href="/pj-0001-presentation" class="logo">
-        <span class="logo-lg"><b>FORGE IT</b></span>
+        <span class="logo-lg"><b>Fala Comunidade</b></span>
     </a>
     <nav class="navbar navbar-static-top">
         <div class="container-fluid">
@@ -22,7 +22,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-header">
-                            <img ng-src="{{ usuarioLogado.imagem }}" class="img-circle" alt="Imagem do Usuário">
+                            <img src="{{ usuarioLogado.imagem }}" class="img-circle" alt="Imagem do Usuário">
                             <p>{{ usuarioLogado.nome + ' - ' + usuarioLogado.cargo }}</p>
                         </li>
                         <li class="user-footer">

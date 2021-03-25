@@ -19,7 +19,9 @@
 			buscarComboLogradouro: buscarComboLogradouro,
 			buscarTodos: buscarTodos,
 			remover: remover,
-			salvar: salvar
+			salvar: salvar,
+			buscarComboVereadores: buscarComboVereadores,
+			buscarDestinatarios: buscarDestinatarios
 		};
 
 		return service;
@@ -38,6 +40,14 @@
 
 		function buscarCombo() {
 			return $http.get(configuracaoREST.url + 'pessoa/combo');
+		}	
+		
+		function buscarDestinatarios() {
+			return $http.get(configuracaoREST.url + 'usuario/listar-destinatarios');
+		}	
+
+		function buscarComboVereadores() {
+			return $http.get(configuracaoREST.url + 'mobile/vereadores/combo');
 		}	
 
 		function buscarComboFiltro(filtro) {

@@ -6,7 +6,7 @@
 
     .image-gallery {
         width: 100%;
-        height: 100px;
+        height: 150px;
         border-radius: 4px;
         background-position: top;
         background-repeat: no-repeat;
@@ -22,15 +22,42 @@
         padding: 0px;
     }
 
+    .imagem-vereador-lista {
+        width: 80px;
+        border: 2px solid #ccc;
+        border-radius: 4px !important;
+    }
+
+    .users-list > li {
+        width: 19%;
+    }
+
+    .vereador-atual {
+        border: 2px dashed green;
+    }
+
+    .vereador-novo {
+        border: 2px dashed blue;
+    }
+
     .imagem-vereador {
-        width: 50px;
-        height: 50px;
+        width: 100px;
+        height: 100px;
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border: 1px solid black;
+        border-radius: 50%;
+    }
+    
+    .cursor-vereador {
+        cursor: pointer;
     }
 </style>
 
-<div class="row" >
+<div class="row">
     <div class="col-md-7">
-        <div class="box box-primary" >
+        <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
                     Demanda: <b>{{ vm.demanda.protocolo }}</b>
@@ -41,7 +68,7 @@
                         style="font-size: 12px;">{{ vm.demanda.dataCriacaoDemanda | date:'dd/MM/yyyy' }}</span>
                 </div>
             </div>
-            <div class="box-body" style="height: 165px;">
+            <div class="box-body" style="min-height: 230px; max-height: 230px !important; ">
                 <div class="row">
                     <div class="col-md-6">
                         <label>
@@ -53,7 +80,8 @@
                         <label>Prazo Final:</label>
                         {{ vm.demanda.existePrazoFinal ? (vm.demanda.prazoFinal | date:'dd/MM/yyyy') : vm.demanda.prazoFinal }}
                         &nbsp;
-                        <button class="btn btn-flat btn-sm btn-primary pull-right" ng-if="!vm.demanda.exibirFinalDeFluxo">
+                        <button class="btn btn-flat btn-sm btn-primary pull-right"
+                            ng-if="!vm.demanda.exibirFinalDeFluxo" ng-click="vm.abrirModalTrocarPrazo()">
                             <i class="fa fa-calendar"></i>&nbsp;Alterar Prazo
                         </button>
                     </div>
@@ -76,12 +104,14 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <label>
-                            Descrição:
-                        </label>
-                        <p>
-                            {{ vm.demanda.descricao }}
-                        </p>
+                        <div class="form-group">
+                            <label>
+                                Descrição:
+                            </label>
+                            <textarea class="form-control text-justify" readonly rows="5"
+                                style="background-color: white; border: 0px;font-size: 16px;" ng-model="vm.demanda.descricao">
+                            </textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,7 +126,12 @@
                 </button>
             </div>
 
-            <div class="box-footer text-right" ng-if="!vm.demanda.exibirControleValidacao && !vm.demanda.exibirFinalDeFluxo">
+            <div style="height: 55px;" class="box-footer text-right" ng-if="!(!vm.demanda.exibirControleValidacao && !vm.demanda.exibirFinalDeFluxo) && !vm.demanda.exibirControleValidacao">
+                
+            </div>
+
+            <div class="box-footer text-right"
+                ng-if="!vm.demanda.exibirControleValidacao && !vm.demanda.exibirFinalDeFluxo">
                 <button class="btn btn-primary btn-flat" ng-click="vm.abrirModalFluxo()">
                     <i class="fa fa-plus"></i>&nbsp;
                     Dar Andamento na Demanda
@@ -110,7 +145,7 @@
             <div class="col-md-12" ng-if="vm.demanda.existeArquivos">
                 <div class="box box-primary">
                     <div class="box-body">
-                        <div class="col-md-3" ng-repeat="objeto in vm.demanda.arquivos">
+                        <div class="col-md-4" ng-repeat="objeto in vm.demanda.arquivos">
                             <div class="image-gallery" style="background-image: url('{{ objeto.arquivo }}');"
                                 ng-click="vm.abrirImagem(objeto, $index)"></div>
                         </div>
@@ -120,20 +155,20 @@
             <div class="col-md-12" ng-if="vm.demanda.existeVereador">
                 <div class="box box-primary">
                     <div class="box-body ">
-                        <div class="row">
+                        <div class="row" style="height: 102px;">
                             <div class="col-md-2">
-                                <img src="{{ vm.demanda.vereador.foto }}" alt="{{ vm.demanda.vereador.nome }}"
-                                    class="imagem-vereador">
+                                <div class="imagem-vereador"
+                                    style="background-image: url('{{ vm.demanda.vereador.foto }}');"></div>
                             </div>
                             <div class="col-md-10"
-                                style="font-size: 30px !important; font-weight: 900; padding-top: 3px;">
+                                style="padding-left: 30px;font-size: 25px !important; font-weight: 900; padding-top: 3px;">
                                 {{ vm.demanda.vereador.nome }} <span class="label label-warning pull-right"
-                                    style="font-size: 13px;">Responsável pela Demanda</span>
+                                    style="font-size: 13px;">VEREADOR RESPONSÁVEL</span>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 text-right">
-                                <a href="">
+                        <div class="row" ng-if="!vm.demanda.exibirFinalDeFluxo">
+                            <div class="col-md-12 text-right" style="margin-top: -20px;">
+                                <a href="#" ng-click="vm.abrirModalVereadores()">
                                     <i class="fa fa-refresh"></i>&nbsp;Alterar Responsável</a>
                             </div>
                         </div>
@@ -143,11 +178,6 @@
         </div>
     </div>
 </div>
-
-<div class="row">
-
-</div>
-
 
 <div class="row">
     <div class="col-md-12">
@@ -161,28 +191,40 @@
             </li>
             <!-- /.timeline-label -->
             <!-- timeline item -->
-            <li ng-repeat="item in vm.fluxo">
+            <li ng-repeat="item in vm.fluxo" style="margin-right: 0px;">
                 <i ng-class="item.icone_fluxo"></i>
 
-                <div class="timeline-item">
-                    <span class="time"><i class="fa fa-clock-o"></i> {{ item.tsTransacao | date:'dd/MM/yyyy HH:MM:ss' }}</span>
+                <div class="timeline-item" style="margin-right: 0px;">
+                    <span class="time"><i class="fa fa-clock-o"></i>
+                        {{ item.tsTransacao | date:'dd/MM/yyyy HH:MM:ss' }}</span>
 
-                    <h3 class="timeline-header"><a href="#">{{ item.operador }}</a> {{ item.titulo_fluxo }}</h3>
+                    <h3 class="timeline-header">
+                        <a href="#">{{ item.operador }}</a> {{ item.titulo_fluxo }}
+                    </h3>
 
                     <div class="timeline-body" ng-if="item.exibirQuadroDescricao || item.possuiArquivos">
                         <div class="row">
                             <div class="col-md-12" ng-if="item.exibirQuadroDescricao" style="margin-bottom: 10px;">
                                 <p>{{ item.descricao }}</p>
+
+                                <span ng-if="item.existeResponsavelAtual"><b>Novo Responsável:</b> <a href="">{{ item.responsavelAtual }}</a></span>
                             </div>
 
                             <div class="col-md-12" ng-if="item.possuiArquivos">
-                                <div class="col-md-2" ng-repeat="objeto in item.arquivos">
-                                    <div class="image-gallery" style="background-image: url('{{ objeto.arquivo }}');"
+                                <div class="col-md-2 text-center" ng-repeat="objeto in item.arquivos">
+                                    <div ng-if="objeto.tipo != 'PDF'" class="image-gallery"
+                                        style="background-image: url('{{ objeto.arquivo }}');"
                                         ng-click="vm.abrirImagem(objeto, $index)"></div>
+
+                                    <div ng-if="objeto.tipo == 'PDF'">
+                                        <i class="fa fa-file-pdf-o fa-4x" aria-hidden="true"></i>
+                                        <br>
+                                        <a href="{{ objeto.arquivo }}" target="_">Visualizar</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
 
                 </div>
@@ -200,6 +242,38 @@
     <!-- /.col -->
 </div>
 
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalVereadores">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Vereadores</h4>
+
+                <div class="pull-right">Vereador atual: {{ vm.demanda.vereador.nome }}</div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="users-list clearfix">
+                            <li ng-repeat="vereador in vm.vereadores" class="cursor-vereador" ng-click="vm.preSelecionarVereador(vereador)">
+                                <img src="{{ vereador.imagem }}" alt="{{ vereador.descricao }}" class="imagem-vereador-lista" ng-class="{ 'vereador-atual': vereador.descricao == vm.demanda.vereador.nome, 
+                                                                                                                                          'vereador-novo' : vm.novoVereador.id == vereador.id} ">
+                                <a class="users-list-name" href="#">{{ vereador.descricao }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="vm.alterarVereador(vm.novoVereador)" ng-if="vm.novoVereador != 0">Definir <b>{{ vm.novoVereador.descricao }}</b> como novo(a) responsável.</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" tabindex="-1" role="dialog" id="modalImagem">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -208,8 +282,8 @@
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Anexo {{ vm.nomeArquivo }}</h4>
             </div>
-            <div class="modal-body modal-body-imagem">
-                <img src="{{ vm.imagemAtual.arquivo }}" alt="{{ vm.imagemAtual.nome }}" class="img-responsive">
+            <div class="modal-body modal-body-imagem text-center">
+                <img src="{{ vm.imagemAtual.arquivo }}" alt="{{ vm.imagemAtual.nome }}" style="width: 100%;">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
@@ -232,8 +306,10 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="situacao">Definir Demanda Como: </label>
-                            <select class="form-control" id="situacao" name="situacao" ng-options="situacao.id_situacao as situacao.descricao for situacao in vm.situacaoList track by situacao.id_situacao" ng-model="vm.demandaFluxo.situacao" required>
-                                <option value="">Selecione</option> 	
+                            <select class="form-control" id="situacao" name="situacao"
+                                ng-options="situacao.id_situacao as situacao.descricao for situacao in vm.situacaoList track by situacao.id_situacao"
+                                ng-model="vm.demandaFluxo.situacao" required>
+                                <option value="">Selecione</option>
                             </select>
                         </div>
                     </div>
@@ -241,8 +317,10 @@
                     <div class="col-md-6" ng-if="vm.demandaFluxo.situacao == 4">
                         <div class="form-group">
                             <label for="destinatario">Destinatário: </label>
-                            <select class="form-control" id="destinatario" name="destinatario" ng-options="destinatario.id_pessoa as destinatario.nome for destinatario in vm.destinatarioList track by destinatario.id_pessoa" ng-model="vm.demandaFluxo.destinatario">
-                                <option value="">Selecione</option> 	
+                            <select class="form-control" id="destinatario" name="destinatario"
+                                ng-options="destinatario.id as destinatario.descricao for destinatario in vm.destinatarios track by destinatario.id"
+                                ng-model="vm.demandaFluxo.destinatario">
+                                <option value="">Selecione</option>
                             </select>
                         </div>
                     </div>
@@ -252,7 +330,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="descricao">Descrição: </label>
-                            <textarea class="form-control" name="descricao" id="descricao" ng-model="vm.demandaFluxo.descricao" cols="30" rows="5"></textarea>
+                            <textarea class="form-control" name="descricao" id="descricao"
+                                ng-model="vm.demandaFluxo.descricao" cols="30" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
@@ -261,6 +340,34 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-flat" ng-click="vm.salvarFluxo()">Salvar</button>
+                <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalPrazo">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Alterar Prazo</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="situacao">Definir como: </label>
+                            <datepicker date-format="dd/MM/yyyy">
+                                <input  type="text" class="form-control" ng-model="vm.prazo" >
+                            </datepicker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-flat" ng-click="vm.alterarPrazo()">Salvar</button>
                 <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Fechar</button>
             </div>
         </div>

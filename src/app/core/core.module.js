@@ -9,6 +9,7 @@
 		'datatables', 
 		'datatables.bootstrap', 
 		'core.utils', 
+		'720kb.datepicker',
 		'angular-loading-bar',
 		'ngStorage',
 		'angular-jwt',

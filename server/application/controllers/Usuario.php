@@ -407,6 +407,13 @@ class Usuario extends MY_Controller
 		print_r(json_encode($array));
 	}
 
+	public function buscarDestinarios()
+	{
+		$lista = $this->UsuarioModel->buscarDestinarios();
+		$array = array('data' => array('destinatarios' => $lista));
+		print_r(json_encode($array));
+	}
+
 	public function buscarDadosUsuarioMobile()
 	{
 		$URL_BASE_IMG_USUARIO = 'http://vereador.forgeit.com.br/server/mobile/usuario/foto/';
