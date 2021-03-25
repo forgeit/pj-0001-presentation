@@ -199,15 +199,15 @@
                         {{ item.tsTransacao | date:'dd/MM/yyyy HH:MM:ss' }}</span>
 
                     <h3 class="timeline-header">
-                        <a href="#">{{ item.operador }}</a> {{ item.titulo_fluxo }}
+                        <a href="#">{{ item.operador }}</a> {{ item.titulo_fluxo }} <a href="" ng-if="item.existeResponsavelAtual">{{ item.responsavelAtual }}</a></span>
                     </h3>
 
                     <div class="timeline-body" ng-if="item.exibirQuadroDescricao || item.possuiArquivos">
                         <div class="row">
                             <div class="col-md-12" ng-if="item.exibirQuadroDescricao" style="margin-bottom: 10px;">
-                                <p>{{ item.descricao }}</p>
-
                                 <span ng-if="item.existeResponsavelAtual"><b>Novo Responsável:</b> <a href="">{{ item.responsavelAtual }}</a></span>
+                                
+                                <p>{{ item.descricao }}</p>
                             </div>
 
                             <div class="col-md-12" ng-if="item.possuiArquivos">

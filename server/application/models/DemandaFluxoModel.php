@@ -62,7 +62,7 @@ class DemandaFluxoModel extends MY_Model {
 				WHERE
 				df.id_demanda = ?
 				GROUP BY 1, 2, 3, 4
-				ORDER BY ts_transacao DESC";
+				ORDER BY 1 DESC, ts_transacao DESC";
 
         $query = $this->db->query($sql, array($id));
 

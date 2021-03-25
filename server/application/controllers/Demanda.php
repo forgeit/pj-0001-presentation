@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Demanda extends MY_Controller {
 
+	private $USER_SISTEMA = 1;
+	private $DEMANDA_CRIADA = 1;
 	private $DEMANDA_PENDENTE_DE_VALIDACAO = 2;
 
 	public function vincularVereador() {
@@ -128,9 +130,20 @@ class Demanda extends MY_Controller {
 
 		$demandaFluxoModel = array(
 			'id_demanda' => $idDemanda,
-			'id_situacao' => $this->DEMANDA_PENDENTE_DE_VALIDACAO,
+			'id_situacao' => $this->DEMANDA_CRIADA,
 			'ts_transacao' => date('Y-m-d H:i:s'),
 			'id_usuario_operacao' => $this->getCodeUsuario()->id
+		);
+
+		$this->DemandaFluxoModel->inserir($demandaFluxoModel);
+
+		sleep(1);
+
+		$demandaFluxoModel = array(
+			'id_demanda' => $idDemanda,
+			'id_situacao' => $this->DEMANDA_PENDENTE_DE_VALIDACAO,
+			'ts_transacao' => date('Y-m-d H:i:s'),
+			'id_usuario_operacao' => $this->USER_SISTEMA
 		);
 
 		$this->DemandaFluxoModel->inserir($demandaFluxoModel);
